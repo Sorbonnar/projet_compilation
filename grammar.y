@@ -59,7 +59,7 @@ node_t make_terminal_node(node_nature nature, char* strval, int intval);
 %left TOK_PLUS TOK_MINUS
 %left TOK_MUL TOK_DIV TOK_MOD
 
-%nonassoc TOK_NOT TOK_BNOT
+%nonassoc TOK_UMINUS TOK_NOT TOK_BNOT
 
 %type <ptr> program listdecl listdeclnonnull vardecl ident type listtypedecl decl maindecl
 %type <ptr> listinst listinstnonnull inst block expr listparamprint paramprint
@@ -86,14 +86,14 @@ listdecl:
         }
         |
         { 
-            $$ = make_node(NODE_LIST, 2, NULL, NULL);
+            $$ = NULL;
         }
         ;
 
 listdeclnonnull:
         vardecl
         { 
-            $$ = make_node(NODE_LIST, 2, $1, NULL);
+            $$ = $1;
         }
         | listdeclnonnull vardecl
         { 
@@ -105,6 +105,35 @@ vardecl:
         type listtypedecl TOK_SEMICOL
         { 
             $$ = make_node(NODE_DECLS, 2, $1, $2);
+        }
+        ;
+
+listtypedecl:
+        decl
+        { 
+            $$ = $1;
+        }
+        | listtypedecl TOK_COMMA decl
+        { 
+            $$ = make_node(NODE_LIST, 2, $1, $3);
+        }
+        ;
+
+decl:
+        ident
+        { 
+            $$ = make_node(NODE_DECL, 2, $1, NULL);
+        }
+        | ident TOK_AFFECT expr
+        { 
+            $$ = make_node(NODE_AFFECT, 2, $1, $3);
+        }
+        ;
+
+maindecl:
+        type ident TOK_LPAR TOK_RPAR block
+        { 
+            $$ = make_node(NODE_FUNC, 3, $1, $2, $5);
         }
         ;
 
@@ -123,35 +152,6 @@ type:
         }
         ;
 
-listtypedecl:
-        decl
-        { 
-            $$ = make_node(NODE_LIST, 2, $1, NULL);
-        }
-        | listtypedecl TOK_COMMA decl
-        { 
-            $$ = make_node(NODE_LIST, 2, $1, $3);
-        }
-        ;
-
-decl:
-        ident
-        { 
-            $$ = $1;
-        }
-        | ident TOK_AFFECT expr
-        { 
-            $$ = make_node(NODE_DECL, 2, $1, $3);
-        }
-        ;
-
-maindecl:
-        type ident TOK_LPAR TOK_RPAR block
-        { 
-            $$ = make_node(NODE_FUNC, 3, $1, $2, $5);
-        }
-        ;
-
 listinst:
         listinstnonnull
         { 
@@ -159,14 +159,14 @@ listinst:
         }
         |
         { 
-            $$ = make_node(NODE_LIST, 2, NULL, NULL);
+            $$ = NULL;
         }
         ;
 
 listinstnonnull:
         inst
         { 
-            $$ = make_node(NODE_LIST, 2, $1, NULL);
+            $$ = $1;
         }
         | listinstnonnull inst
         { 
@@ -183,10 +183,10 @@ inst:
         { 
             $$ = make_node(NODE_IF, 3, $3, $5, $7);
         }
-        /*| TOK_IF TOK_LPAR expr TOK_RPAR inst // Conflit avec le if else mais fonctionne quand même
+        | TOK_IF TOK_LPAR expr TOK_RPAR inst %prec TOK_THEN
         { 
             $$ = make_node(NODE_IF, 2, $3, $5);
-        }*/
+        }
         | TOK_WHILE TOK_LPAR expr TOK_RPAR inst
         { 
             $$ = make_node(NODE_WHILE, 2, $3, $5);
@@ -249,6 +249,10 @@ expr:
         { 
             $$ = make_node(NODE_GT, 2, $1, $3);
         }
+        // | TOK_MINUS expr %prec TOK_UMINUS // Ne fonctionne pas (erreur untyped TOK_MINUS)
+        // { 
+        //     $$ = make_node(NODE_UMINUS, 1, $1);
+        // }
         | expr TOK_GE expr
         { 
             $$ = make_node(NODE_GE, 2, $1, $3);
@@ -311,7 +315,7 @@ expr:
         }
         | ident TOK_AFFECT expr
         {
-            $$ = make_node(NODE_AFFECT, 1, $1, $3);
+            $$ = make_node(NODE_AFFECT, 2, $1, $3);
         }
         | TOK_INTVAL
         { 
@@ -338,7 +342,7 @@ listparamprint:
         }
         | paramprint
         { 
-            $$ = make_node(NODE_LIST, 2, $1, NULL);
+            $$ = $1;
         }
         ;
 
@@ -395,6 +399,7 @@ node_t make_node(node_nature nature, int nops, ...) {
     return node;
 }
 
+// Fonction pour les noeuds terminaux
 node_t make_terminal_node(node_nature nature, char* strval, int intval) {
     node_t node = (node_t) malloc(sizeof(node_s));
     
@@ -461,7 +466,7 @@ node_t make_terminal_node(node_nature nature, char* strval, int intval) {
 }
 
 void analyse_tree(node_t root) {
-    //dump_tree(root, "apres_syntaxe.dot");
+    dump_tree(root, "apres_syntaxe.dot");
     if (!stop_after_syntax) {
         analyse_passe_1(root);
         //dump_tree(root, "apres_passe_1.dot");

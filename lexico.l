@@ -66,7 +66,6 @@ IDF             {LETTRE}({LETTRE}|{CHIFFRE}|_)*
 "{"             RETURN(TOK_LACC);
 "}"             RETURN(TOK_RACC);
 
-"then"          RETURN(TOK_THEN);
 "else"          RETURN(TOK_ELSE);
 
 "="             RETURN(TOK_AFFECT);

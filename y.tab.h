@@ -42,8 +42,9 @@
 #define TOK_MUL 295
 #define TOK_DIV 296
 #define TOK_MOD 297
-#define TOK_NOT 298
-#define TOK_BNOT 299
+#define TOK_UMINUS 298
+#define TOK_NOT 299
+#define TOK_BNOT 300
 #ifdef YYSTYPE
 #undef  YYSTYPE_IS_DECLARED
 #define YYSTYPE_IS_DECLARED 1
