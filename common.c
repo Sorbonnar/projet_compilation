@@ -340,7 +340,3 @@ const char * node_nature2symb(node_nature t) {
             exit(1);
     }
 }
-
-
-
-

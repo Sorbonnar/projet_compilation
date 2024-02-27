@@ -126,7 +126,7 @@ decl:
         }
         | ident TOK_AFFECT expr
         { 
-            $$ = make_node(NODE_AFFECT, 2, $1, $3);
+            $$ = make_node(NODE_DECL, 2, $1, $3);
         }
         ;
 
@@ -417,39 +417,28 @@ node_t make_terminal_node(node_nature nature, char* strval, int intval) {
 
     switch (nature) {
         case NODE_IDENT:
-            if (strval != NULL) {
-                char * tempIdent = strdupl(strval);
-                if (tempIdent == NULL) {
-                    free(node);
-                    fprintf(stderr, "Error line %d: strdupl error\n", yylineno);
-                    exit(1);
-                }
-                else {
-                    node->ident = tempIdent;
-                }
-            }
+            assert (strval != NULL);
+
+            node->ident = strval;
+            
             break;
+
         case NODE_STRINGVAL:
-            if (strval != NULL) {
-                char * tempStr = strdupl(strval);
-                if (tempStr == NULL) {
-                    free(node);
-                    fprintf(stderr, "Error line %d: strdupl error\n", yylineno);
-                    exit(1);
-                }
-                else {
-                    node->str = tempStr;
-                }
-            }
+            assert (strval != NULL);
+            
+            node->str = strval;
+            
             break;
         
         case NODE_TYPE:
             node->type = (intval == 0) ? TYPE_INT : (intval == 1) ? TYPE_BOOL : (intval == 2) ? TYPE_VOID : TYPE_NONE;
             break;
+
         case NODE_INTVAL:
         case NODE_BOOLVAL:
             node->value = intval;
             break;
+            
         default:
             free(node);
             fprintf(stderr, "Error line %d: Unknown type error\n", yylineno);

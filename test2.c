@@ -1,9 +1,14 @@
 // Test un programme complet
+int start = 0;
 
 void main() {
-    int i;
+    int i = 0;
 
-    for (i = 0; i < 10; i = i + 1) {
-        print(i);
+    while (i < 10) {
+        sum = sum + i;
+        i = i + 1;
     }
+
+    print("sum:", sum);
 }
+ 
