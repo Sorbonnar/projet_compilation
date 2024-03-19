@@ -8,7 +8,7 @@ digraph global_vars {
     N5 [shape=record, label="{{NODE IDENT|Type: TYPE NONE}|{<decl>Decl      |Ident: start|Offset: 0}}"];
     edge[tailclip=true];
     N4 -> N5
-    N6 [shape=record, label="{{NODE INTVAL|Type: TYPE NONE}|{Value: 0}}"];
+    N6 [shape=record, label="{{NODE INTVAL|Type: TYPE NONE}|{Value: 10}}"];
     edge[tailclip=true];
     N4 -> N6
     edge[tailclip=true];

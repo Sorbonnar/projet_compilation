@@ -386,9 +386,8 @@ node_t make_node(node_nature nature, int nops, ...) {
 
     va_list ap;
     va_start(ap, nops);
-    for (int i = 0; i < nops; i++) {
+    for (int i = 0; i < nops; i++)
         node->opr[i] = va_arg(ap, node_t);
-    }
     va_end(ap);
 
     if (node == NULL) {
@@ -401,33 +400,25 @@ node_t make_node(node_nature nature, int nops, ...) {
 
 // Fonction pour les noeuds terminaux
 node_t make_terminal_node(node_nature nature, char* strval, int intval) {
-    node_t node = (node_t) malloc(sizeof(node_s));
+    node_t node = make_node(nature, 0);
     
     if (node == NULL) {
         fprintf(stderr, "Error line %d: malloc error\n", yylineno);
         exit(1);
     }
-
-    node->nature = nature;
-    node->lineno = yylineno;
-    node->nops = 0;
-    node->opr = NULL;
+    
     node->str = NULL;
     node->ident = NULL;
 
     switch (nature) {
         case NODE_IDENT:
             assert (strval != NULL);
-
             node->ident = strval;
-            
             break;
 
         case NODE_STRINGVAL:
             assert (strval != NULL);
-            
             node->str = strval;
-            
             break;
         
         case NODE_TYPE:
