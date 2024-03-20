@@ -750,8 +750,7 @@ node_t make_terminal_node(node_nature nature, char* strval, int intval) {
         fprintf(stderr, "Error line %d: malloc error\n", yylineno);
         exit(1);
     }
-
-    node->opr = NULL;
+    
     node->str = NULL;
     node->ident = NULL;
 
@@ -794,7 +793,8 @@ void analyse_tree(node_t root) {
     dump_tree(root, "apres_syntaxe.dot");
     if (!stop_after_syntax) {
         analyse_passe_1(root);
-        //dump_tree(root, "apres_passe_1.dot");
+        check_program_tree(root);
+        dump_tree(root, "apres_passe_1.dot");
         if (!stop_after_verif) {
             create_program(); 
             gen_code_passe_2(root);

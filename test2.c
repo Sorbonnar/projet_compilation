@@ -1,5 +1,5 @@
 // Test un programme complet
-int start = 10;
+int start = 10, end, a = 2;
 
 void main() {
     int i = 0;
