@@ -26,26 +26,17 @@ void parse_args(int argc, char ** argv) {
     infile = argv[1];
 }
 
-
-
 void free_nodes(node_t n) {
     if (n == NULL)
         return;
 
-
     for (int32_t i = 0; i < n->nops; i += 1)
         free_nodes(n->opr[i]);
-    
-
-    if (n->decl_node != NULL && n->decl_node != n)
-        free_nodes(n->decl_node);
-
 
     if (n->nature == NODE_IDENT)
         free(n->ident);
     else if (n->nature == NODE_STRINGVAL)
         free(n->str);
-
 
     free(n);
 }
