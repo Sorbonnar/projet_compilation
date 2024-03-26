@@ -20,6 +20,18 @@ int32_t trace_level = DEFAULT_TRACE_LEVEL;
 extern bool stop_after_syntax;
 extern bool stop_after_verif;
 
+void affiche_utilisation() {
+    printf("Utilisation: minicc [options] <fichier_source>\n");
+    printf("Options:\n");
+    printf("  -b\t\tAffiche une bannière indiquant le nom du compilateur et des membres du binôme\n");
+    printf("  -o <filename>\tDéfinit le nom du fichier assembleur produit (défaut : out.s)\n");
+    printf("  -t <level>\tDéfinit le niveau de trace à utiliser entre 0 et 5 (0 = pas de trace ; 5 = toutes les traces; defaut = 0)\n");
+    printf("  -r <count>\tDéfinit le nombre maximum de registres à utiliser, entre 4 et 8 (défaut : 8)\n");
+    printf("  -s\t\tArrêter la compilation après l'analyse syntaxique (défaut = non)\n");
+    printf("  -v\t\tArrêter la compilation après la passe de vérifications (défaut = non)\n");
+    printf("  -h\t\tAfficher la liste des options (fonction d'usage) et arrêter le parsing des arguments\n");
+    exit(1);
+}
 
 void parse_args(int argc, char ** argv) {
     // A implementer (la ligne suivante est a changer)

@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "defs.h"
 #include "common.h"
@@ -13,11 +14,17 @@ void process_expression(node_t node);
 void process_instruction(node_t node);
 void process_declaration(bool global, node_t node, node_type type);
 void parcours_declaration(node_type type, bool global, node_t node);
-
+ 
 void analyse_passe_1(node_t root) {
     push_global_context();
-    process_declaration(1, root->opr[0], TYPE_VOID);
-    parcours_base(root->opr[1]);
+    process_declaration(1, root->opr[0], TYPE_NONE);
+    if (root->opr[1] != NULL) {
+        parcours_base(root->opr[1]);
+    }
+    else {
+        fprintf(stderr, "Error line %d: No main function.\n", root->lineno);
+        exit(1);
+    }
 }
   
 void parcours_base(node_t node) {
@@ -26,7 +33,7 @@ void parcours_base(node_t node) {
     switch (node->nature) {
         case NODE_BLOCK:
             push_context();
-            process_declaration(0, node->opr[0], TYPE_VOID);
+            process_declaration(0, node->opr[0], TYPE_NONE);
             parcours_base(node->opr[1]);
             pop_context();
             break;
@@ -42,8 +49,8 @@ void parcours_base(node_t node) {
                 fprintf(stderr, "Error line %d: Function node does not have the correct type.\n", node->lineno);
                 exit(1);
             }
-            else if (node->opr[1]->nature != NODE_IDENT) {
-                fprintf(stderr, "Error line %d: Function node does not have a correct name.\n", node->lineno);
+            else if (node->opr[1]->nature != NODE_IDENT || strcmp(node->opr[1]->ident, "main") != 0) {
+                fprintf(stderr, "Error line %d: No main function.\n", node->lineno);
                 exit(1);
             }
             else if (node->opr[2]->nature != NODE_BLOCK) {

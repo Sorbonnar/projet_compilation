@@ -25,7 +25,7 @@ extern int yylineno;
 void yyerror(node_t * program_root, char * s);
 void analyse_tree(node_t root);
 node_t make_node(node_nature nature, int nops, ...);
-node_t make_terminal_node(node_nature nature, char* strval, int intval);
+node_t make_terminal_node(node_nature nature, ...);
 
 %}
 
@@ -140,15 +140,15 @@ maindecl:
 type:
         TOK_INT
         { 
-            $$ = make_terminal_node(NODE_TYPE, NULL, 0);
+            $$ = make_terminal_node(NODE_TYPE, 0);
         }
         | TOK_BOOL
         { 
-            $$ = make_terminal_node(NODE_TYPE, NULL, 1);
+            $$ = make_terminal_node(NODE_TYPE, 1);
         }
         | TOK_VOID
         { 
-            $$ = make_terminal_node(NODE_TYPE, NULL, 2);
+            $$ = make_terminal_node(NODE_TYPE, 2);
         }
         ;
 
@@ -319,15 +319,15 @@ expr:
         }
         | TOK_INTVAL
         { 
-            $$ = make_terminal_node(NODE_INTVAL, NULL, $1);
+            $$ = make_terminal_node(NODE_INTVAL, $1);
         }
         | TOK_TRUE
         { 
-            $$ = make_terminal_node(NODE_BOOLVAL, NULL, 1);
+            $$ = make_terminal_node(NODE_BOOLVAL, 1);
         }
         | TOK_FALSE
         { 
-            $$ = make_terminal_node(NODE_BOOLVAL, NULL, 0);
+            $$ = make_terminal_node(NODE_BOOLVAL, 0);
         }
         | ident
         { 
@@ -353,14 +353,14 @@ paramprint:
         }
         | TOK_STRING
         { 
-            $$ = make_terminal_node(NODE_STRINGVAL, $1, 0);
+            $$ = make_terminal_node(NODE_STRINGVAL, $1);
         }
         ;
 
 ident:
         TOK_IDENT
         { 
-            $$ = make_terminal_node(NODE_IDENT, $1, 0);
+            $$ = make_terminal_node(NODE_IDENT, $1);
         }
         ;
 
@@ -399,58 +399,61 @@ node_t make_node(node_nature nature, int nops, ...) {
 }
 
 // Fonction pour les noeuds terminaux
-node_t make_terminal_node(node_nature nature, char* strval, int intval) {
+node_t make_terminal_node(node_nature nature, ...) {
     node_t node = make_node(nature, 0);
     
     if (node == NULL) {
         fprintf(stderr, "Error line %d: malloc error\n", yylineno);
         exit(1);
     }
-    
-    node->str = NULL;
-    node->ident = NULL;
+
+    va_list args;
+    va_start(args, nature);
 
     switch (nature) {
         case NODE_IDENT:
-            assert (strval != NULL);
-            node->ident = strval;
-            break;
-
         case NODE_STRINGVAL:
-            assert (strval != NULL);
-            node->str = strval;
+            char* strval = va_arg(args, char*);
+            assert(strval != NULL);
+
+            if (nature == NODE_IDENT) {
+                node->ident = strval;
+            }
+            else {
+                node->str = strval;
+            }
             break;
         
         case NODE_TYPE:
+            int intval = va_arg(args, int);
             node->type = (intval == 0) ? TYPE_INT : (intval == 1) ? TYPE_BOOL : (intval == 2) ? TYPE_VOID : TYPE_NONE;
             break;
 
         case NODE_INTVAL:
         case NODE_BOOLVAL:
-            node->value = intval;
+            node->value = va_arg(args, int);
             break;
             
         default:
+            va_end(args);
             free(node);
             fprintf(stderr, "Error line %d: Unknown type error\n", yylineno);
             exit(1);
             break;
     }
 
-    if (node == NULL) {
-        fprintf(stderr, "Error line %d: Node creation error\n", yylineno);
-        exit(1);
-    }
+    va_end(args);
 
     return node;
 }
+
 
 void analyse_tree(node_t root) {
     dump_tree(root, "apres_syntaxe.dot");
     if (!stop_after_syntax) {
         analyse_passe_1(root);
-        check_program_tree(root);
         dump_tree(root, "apres_passe_1.dot");
+        check_program_tree(root);
         if (!stop_after_verif) {
             create_program(); 
             gen_code_passe_2(root);
