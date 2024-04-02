@@ -13,12 +13,11 @@ void parcours_base(node_t node);
 void process_expression(node_t node);
 void process_instruction(node_t node);
 void process_declaration(bool global, node_t node, node_type type);
-void parcours_declaration(node_type type, bool global, node_t node);
  
 void analyse_passe_1(node_t root) {
     push_global_context();
     process_declaration(1, root->opr[0], TYPE_NONE);
-    if (root->opr[1] != NULL) {
+    if (root->opr[1] != NULL || root->opr[1]->nature != NODE_FUNC) {
         parcours_base(root->opr[1]);
     }
     else {
