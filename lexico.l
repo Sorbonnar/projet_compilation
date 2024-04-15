@@ -94,6 +94,7 @@ IDF             {LETTRE}({LETTRE}|{CHIFFRE}|_)*
 "~"             RETURN(TOK_NOT);
 "!"             RETURN(TOK_BNOT);
 
+
 {IDF} {
                 #if !LEX_DEBUG
                 yylval.strval = strdupl(yytext);

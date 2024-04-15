@@ -249,10 +249,10 @@ expr:
         { 
             $$ = make_node(NODE_GT, 2, $1, $3);
         }
-        // | TOK_MINUS expr %prec TOK_UMINUS // Ne fonctionne pas (erreur untyped TOK_MINUS)
-        // { 
-        //     $$ = make_node(NODE_UMINUS, 1, $1);
-        // }
+        | TOK_MINUS expr %prec TOK_UMINUS // Ne fonctionne pas (erreur untyped TOK_MINUS)
+        { 
+            $$ = make_node(NODE_UMINUS, 1, $2);
+        }
         | expr TOK_GE expr
         { 
             $$ = make_node(NODE_GE, 2, $1, $3);
@@ -378,6 +378,7 @@ node_t make_node(node_nature nature, int nops, ...) {
     node->lineno = yylineno;
     node->nops = nops;
     node->opr = (node_t*) malloc(nops * sizeof(node_t));
+    node->global_decl = false;
     
     if (node->opr == NULL) {
         fprintf(stderr, "Error line %d: malloc error\n", yylineno);
@@ -453,7 +454,7 @@ void analyse_tree(node_t root) {
     if (!stop_after_syntax) {
         analyse_passe_1(root);
         dump_tree(root, "apres_passe_1.dot");
-        check_program_tree(root);
+        // check_program_tree(root);
         if (!stop_after_verif) {
             create_program(); 
             gen_code_passe_2(root);

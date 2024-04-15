@@ -1045,7 +1045,7 @@ RETURN(TOK_BNOT);
 	YY_BREAK
 case 40:
 YY_RULE_SETUP
-#line 97 "lexico.l"
+#line 98 "lexico.l"
 {
                 #if !LEX_DEBUG
                 yylval.strval = strdupl(yytext);
@@ -1059,7 +1059,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 41:
 YY_RULE_SETUP
-#line 108 "lexico.l"
+#line 109 "lexico.l"
 {
                 #if !LEX_DEBUG
                 yylval.intval = atoi(yytext);
@@ -1074,7 +1074,7 @@ YY_RULE_SETUP
 case 42:
 /* rule 42 can match eol */
 YY_RULE_SETUP
-#line 119 "lexico.l"
+#line 120 "lexico.l"
 {
                 #if !LEX_DEBUG
                 yylval.strval = strdupl(yytext);
@@ -1088,19 +1088,19 @@ YY_RULE_SETUP
 	YY_BREAK
 case 43:
 YY_RULE_SETUP
-#line 130 "lexico.l"
+#line 131 "lexico.l"
 {
 }
 	YY_BREAK
 case 44:
 /* rule 44 can match eol */
 YY_RULE_SETUP
-#line 133 "lexico.l"
+#line 134 "lexico.l"
 
 	YY_BREAK
 case 45:
 YY_RULE_SETUP
-#line 135 "lexico.l"
+#line 136 "lexico.l"
 {
                 fprintf(stderr, "Error line %d: Lexical error\n", yylineno);
                 exit(1);
@@ -1108,7 +1108,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 46:
 YY_RULE_SETUP
-#line 140 "lexico.l"
+#line 141 "lexico.l"
 ECHO;
 	YY_BREAK
 #line 1115 "lex.yy.c"
@@ -2128,7 +2128,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 140 "lexico.l"
+#line 141 "lexico.l"
 
 
 int yywrap(void) {

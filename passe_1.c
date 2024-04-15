@@ -4,6 +4,7 @@
 
 #include "defs.h"
 #include "common.h"
+#include "arch.h"
 #include "passe_1.h"
 #include "miniccutils.h"
 
@@ -41,7 +42,7 @@ void parcours_base(node_t node) {
             reset_env_current_offset();
             push_context();
             if (node->nops < 3) {
-                fprintf(stderr, "Error line %d: Function node does not have enough operands.\n", node->lineno);
+                fprintf(stderr, "Error line %d: Function node does not have enough son.\n", node->lineno);
                 exit(1);
             }
             else if (node->opr[0]->type != TYPE_VOID) {
@@ -61,44 +62,15 @@ void parcours_base(node_t node) {
             pop_context();
             break;
 
-        case NODE_IF:
-        case NODE_WHILE:
-        case NODE_DOWHILE:
-        case NODE_FOR:
-        case NODE_PRINT:
-        case NODE_AFFECT:
+        case NODE_IF: case NODE_WHILE: case NODE_DOWHILE:
+        case NODE_FOR: case NODE_PRINT: case NODE_AFFECT:
             process_instruction(node);
             break;
 
-        case NODE_PLUS:
-        case NODE_MINUS:
-        case NODE_MUL:
-        case NODE_DIV:
-        case NODE_MOD:
-        case NODE_AND:
-        case NODE_OR:
-        case NODE_NOT:
-        case NODE_LT:
-        case NODE_GT:
-        case NODE_LE:
-        case NODE_GE:
-        case NODE_EQ:
-        case NODE_NE:
-        case NODE_BAND:
-        case NODE_BOR:
-        case NODE_BXOR:
-        case NODE_SLL:
-        case NODE_SRA:
-        case NODE_SRL:
-        case NODE_UMINUS:
-        case NODE_BNOT:
-            process_expression(node);
-            break;
-
-        case NODE_INTVAL:
-        case NODE_BOOLVAL:
-        case NODE_STRINGVAL:
-        case NODE_IDENT:
+        case NODE_PLUS: case NODE_MINUS: case NODE_MUL: case NODE_DIV: case NODE_MOD: case NODE_AND: case NODE_BAND:
+        case NODE_NOT: case NODE_LT: case NODE_GT: case NODE_LE: case NODE_GE: case NODE_EQ: case NODE_NE: case NODE_OR:
+        case NODE_BOR: case NODE_BXOR: case NODE_SLL: case NODE_SRA: case NODE_SRL: case NODE_UMINUS: case NODE_BNOT:
+        case NODE_INTVAL: case NODE_BOOLVAL: case NODE_STRINGVAL: case NODE_IDENT:
             process_expression(node);
             break;
 
@@ -128,9 +100,13 @@ void process_instruction(node_t node) {
             break;
 
         case NODE_WHILE:
-        case NODE_DOWHILE:
             process_expression(node->opr[0]);
             parcours_base(node->opr[1]);
+            break;
+
+        case NODE_DOWHILE:
+            process_expression(node->opr[1]);
+            parcours_base(node->opr[0]);
             break;
 
         case NODE_FOR:
@@ -153,6 +129,16 @@ void process_instruction(node_t node) {
             }
             process_expression(node->opr[0]);
             process_expression(node->opr[1]);
+
+            if (node->opr[0]->type != node->opr[1]->type) {
+                fprintf(stderr, "Error line %d: Incorrect type for affectation.\n", node->lineno);
+                exit(1);
+            }
+
+            if (node->opr[0]->type != TYPE_INT && node->opr[0]->type != TYPE_BOOL) {
+                fprintf(stderr, "Error line %d: Invalid type for affectation.\n", node->lineno);
+                exit(1);
+            }
             break;
 
         default:
@@ -161,22 +147,13 @@ void process_instruction(node_t node) {
     }
 }
 
-
 void process_expression(node_t node) {
     if (node == NULL) return;
 
     switch (node->nature) {
-        case NODE_PLUS:
-        case NODE_MINUS:
-        case NODE_MUL:
-        case NODE_DIV:
-        case NODE_MOD:
-        case NODE_BAND:
-        case NODE_BOR:
-        case NODE_BXOR:
-        case NODE_SLL:
-        case NODE_SRL:
-        case NODE_SRA:
+        case NODE_PLUS: case NODE_MINUS: case NODE_MUL: case NODE_DIV:
+        case NODE_MOD: case NODE_BAND: case NODE_BOR: case NODE_BXOR:
+        case NODE_SLL: case NODE_SRL: case NODE_SRA:
             process_expression(node->opr[0]);
             process_expression(node->opr[1]);
 
@@ -188,12 +165,8 @@ void process_expression(node_t node) {
             node->type = TYPE_INT;
             break;
 
-        case NODE_EQ:
-        case NODE_NE:
-        case NODE_LT:
-        case NODE_GT:
-        case NODE_LE:
-        case NODE_GE:
+        case NODE_EQ: case NODE_NE: case NODE_LT:
+        case NODE_GT: case NODE_LE: case NODE_GE:
             process_expression(node->opr[0]);
             process_expression(node->opr[1]);
 
@@ -205,8 +178,7 @@ void process_expression(node_t node) {
             node->type = TYPE_BOOL;
             break;
 
-        case NODE_AND:
-        case NODE_OR:
+        case NODE_AND: case NODE_OR:
             process_expression(node->opr[0]);
             process_expression(node->opr[1]);
 
@@ -218,27 +190,26 @@ void process_expression(node_t node) {
             node->type = TYPE_BOOL;
             break;
 
-        case NODE_NOT:
+        case NODE_UMINUS: case NODE_NOT:
             process_expression(node->opr[0]);
 
-            if (node->opr[0]->type != TYPE_BOOL) {
+            if (node->opr[0]->type != TYPE_INT) {
                 fprintf(stderr, "Error line %d: Incorrect type for NOT operation operand.\n", node->lineno);
                 exit(1);
             }
 
-            node->type = TYPE_BOOL;
+            node->type = TYPE_INT;
             break;
 
-        case NODE_UMINUS:
         case NODE_BNOT:
             process_expression(node->opr[0]);
 
-            if (node->opr[0]->type != TYPE_INT) {
+            if (node->opr[0]->type != TYPE_BOOL) {
                 fprintf(stderr, "Error line %d: Incorrect type for unary operation operand.\n", node->lineno);
                 exit(1);
             }
 
-            node->type = TYPE_INT;
+            node->type = TYPE_BOOL;
             break;
 
         case NODE_INTVAL:
@@ -301,7 +272,7 @@ void process_declaration(bool global, node_t node, node_type type) {
             node->opr[1]->type = type;
             if (type == TYPE_INT) {
                 node->opr[1]->nature = NODE_INTVAL;
-                node->opr[1]->value = 0;
+                node->opr[1]->value = 10;
             }
             else if (type == TYPE_BOOL) {
                 node->opr[1]->nature = NODE_BOOLVAL;

@@ -3,8 +3,8 @@ int a = 0, b;
 bool c = false;
 
 void main() {
-    int i, a = b;
-    bool d = false;
+    int i, a = b, e = 2;
+    bool d = true;
 
     if (c) {
         b;
@@ -15,31 +15,32 @@ void main() {
     while (true) {
         a;
     }
+
     do {
         a;
     }
-    while (true);
+    while(d);
 
-    a = b * c;
-    a = b / c;
-    a = b % c;
-    a = b + c;
-    a = b - c;
+    a = b * e;
+    a = b / e;
+    a = b % e;
+    a = b + e;
+    a = b - e;
     c = b < a;
     c = b > a;
     c = b == a;
     c = b <= a;
     c = b >= a;
     c = b != a;
-    c = b && a;
+    c = d && c;
     c = b & a;
-    c = b || a;
+    c = d || c;
     c = b | a;
     c = b ^ a;
     c = b << a;
     c = b >> a;
     c = b >>> a;
-    c = !d;
+    c = !a;
     c = ~d;
 
     print("a: ", a, "\n");
