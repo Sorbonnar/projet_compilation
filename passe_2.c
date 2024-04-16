@@ -9,6 +9,7 @@
 #include "miniccutils.h"
 
 extern char * outfile;
+bool test = false;
 
 void parcours_gen(node_t node);
 void create_print(node_t node);
@@ -177,11 +178,11 @@ void create_instruction(node_t node) {
             break;
 
         case NODE_AFFECT:
-            create_expression(node->opr[1]);
             int32_t reg = get_current_reg();
+            create_expression(node->opr[1]);
 
             if (node->opr[0]->decl_node != NULL) {
-                int32_t numReg = node->opr[0]->decl_node->global_decl ? get_restore_reg() : 29;
+                int32_t numReg = node->opr[0]->decl_node->global_decl ? get_current_reg() : 29;
 
                 if (!reg_available() && node->opr[0]->decl_node->global_decl) {
                     push_temporary(numReg);
@@ -193,7 +194,8 @@ void create_instruction(node_t node) {
                 if (!reg_available() && node->opr[0]->decl_node->global_decl) {
                     pop_temporary(numReg);
                 }
-            } else {
+            }
+            else {
                 fprintf(stderr, "Error line %d: Undeclared variable %s.\n", node->lineno, node->opr[0]->ident);
                 exit(1);
             }
@@ -212,213 +214,132 @@ void create_expression(node_t node) {
 
     int32_t reg = get_current_reg(), reg1, reg2;
 
-    switch (node->nature) {
-        case NODE_PLUS:
-        case NODE_MINUS:
-        case NODE_MUL:
-        case NODE_DIV:
-        case NODE_MOD:
-        case NODE_BAND:
-        case NODE_BOR:
-        case NODE_BXOR:
-        case NODE_AND:
-        case NODE_OR:
-            create_expression(node->opr[0]);
-            reg1 = get_current_reg();
+    if (node->nature == NODE_IDENT) {
+        if (!reg_available()) {
+            push_temporary(reg);
+        }
 
-            if (!reg_available()) {
-                push_temporary(reg1);
+        if (node->decl_node != NULL) {
+            if (node->decl_node->global_decl) {
+                lui_inst_create(reg, 0x1001);
+                lw_inst_create(reg, node->decl_node->offset, reg);
+            } else {
+                lw_inst_create(reg, node->decl_node->offset, 29);
             }
-            else {
-                allocate_reg();
-            }
-
-            create_expression(node->opr[1]);
-            reg2 = get_current_reg();
-
-            switch (node->nature) {
-                case NODE_PLUS:
-                    addu_inst_create(reg1, reg1, reg2);
-                    break;
-                case NODE_MINUS:
-                    subu_inst_create(reg1, reg1, reg2);
-                    break;
-                case NODE_MUL:
-                    mult_inst_create(reg1, reg2);
-                    mflo_inst_create(reg1);
-                    break;
-                case NODE_DIV:
-                    div_inst_create(reg1, reg2);
-                    mflo_inst_create(reg1);
-                    break;
-                case NODE_MOD:
-                    div_inst_create(reg1, reg2);
-                    mfhi_inst_create(reg1);
-                    break;
-                case NODE_BAND:
-                    and_inst_create(reg1, reg1, reg2);
-                    break;
-                case NODE_BOR:
-                    or_inst_create(reg1, reg1, reg2);
-                    break;
-                case NODE_BXOR:
-                    xor_inst_create(reg1, reg1, reg2);
-                    break;
-                case NODE_AND:
-                    and_inst_create(reg1, reg1, reg2);
-                    break;
-                case NODE_OR:
-                    or_inst_create(reg1, reg1, reg2);
-                    break;
-            }
-
-            if (!reg_available()) {
-                pop_temporary(reg1);
-            }
-            else {
-                release_reg();
-            }
-            break;
-        
-        case NODE_SLL:
-            // TODO : Implement
-            break;
-        
-        case NODE_SRL:
-            // TODO : Implement
-            break;
-        
-        case NODE_SRA:
-            // TODO : Implement
-            break;
-        
-        case NODE_EQ:
-        case NODE_NE:
-        case NODE_LT:
-        case NODE_GT:
-        case NODE_LE:
-        case NODE_GE:
-            create_expression(node->opr[0]);
-            reg1 = get_current_reg();
-
-            if (!reg_available()) {
-                // push_temporary(reg1);
-            }
-            else {
-                allocate_reg();
-            }
-
-            create_expression(node->opr[1]);
-            reg2 = get_current_reg();
-
-            switch (node->nature) {
-                case NODE_EQ:
-                    xor_inst_create(reg1, reg1, reg2);
-                    sltiu_inst_create(reg1, reg1, 1);
-                    break;
-                case NODE_NE:
-                    xor_inst_create(reg1, reg1, reg2);
-                    sltu_inst_create(reg1, 0, reg1);
-                    break;
-                case NODE_LT:
-                    slt_inst_create(reg1, reg1, reg2);
-                    break;
-                case NODE_GT:
-                    slt_inst_create(reg1, reg2, reg1);
-                    break;
-                case NODE_LE:
-                    slt_inst_create(reg1, reg2, reg1);
-                    xori_inst_create(reg1, reg1, 1);
-                    break;
-                case NODE_GE:
-                    slt_inst_create(reg1, reg1, reg2);
-                    xori_inst_create(reg1, reg1, 1);
-                    break;
-            }
-
-            if (!reg_available()) {
-                pop_temporary(reg1);
-            }
-            else {
-                release_reg();
-            }
-            break;
-
-        case NODE_NOT:
-        case NODE_UMINUS:
-        case NODE_BNOT:
-            create_expression(node->opr[0]);
-            reg = get_current_reg();
-
-            if (!reg_available()) {
-                // push_temporary(reg);
-            }
-            else {
-                allocate_reg();
-            }
-
-            switch (node->nature) {
-                case NODE_NOT:
-                    nor_inst_create(reg, 0, reg);
-                    break;
-                case NODE_UMINUS:
-                    subu_inst_create(reg, 0, reg);
-                    break;
-                case NODE_BNOT:
-                    xori_inst_create(reg, reg, 1);
-                    break;
-            }
-
-            if (!reg_available()) {
-                pop_temporary(reg);
-            }
-            else {
-                release_reg();
-            }
-            break;
-
-        case NODE_IDENT:
-            if (!reg_available()) {
-                // push_temporary(get_current_reg());
-            }
-
-            if (node->decl_node != NULL) {
-                if (node->decl_node->global_decl) {
-                    lui_inst_create(get_current_reg(), 0x1001);
-                    lw_inst_create(get_current_reg(), node->decl_node->offset, get_current_reg());
-                } else {
-                    lw_inst_create(get_current_reg(), node->decl_node->offset, 29);
-                }
-            }
-            else {
-                fprintf(stderr, "Error line %d: Undeclared variable %s.\n", node->lineno, node->ident);
-                exit(1);
-            }
-
-            if (!reg_available()) {
-                pop_temporary(get_current_reg());
-            }
-            break;
-
-        case NODE_INTVAL: case NODE_BOOLVAL:
-            if (!reg_available()) {
-                push_temporary(reg);
-            }
-
-            ori_inst_create(reg, 0, node->value);
-
-            if (!reg_available()) {
-                pop_temporary(reg);
-            }
-            break;
-
-        case NODE_STRINGVAL:
-            break;
-
-        default:
-            fprintf(stderr, "Error line %d: Unknown expression type in generation.\n", node->lineno);
+        }
+        else {
+            fprintf(stderr, "Error line %d: Undeclared variable %s.\n", node->lineno, node->ident);
             exit(1);
-            break;
+        }
+
+        if (!reg_available()) {
+            pop_temporary(reg);
+        }
+    }
+    else if (node->nature == NODE_INTVAL || node->nature == NODE_BOOLVAL) {
+        ori_inst_create(reg, 0, node->value);
+    }
+    else {
+        create_expression(node->opr[0]);
+        reg1 = get_current_reg();
+        reg = reg1;
+
+        if (!reg_available()) {
+            push_temporary(reg1);
+            reg1 = get_restore_reg();
+        }
+        else {
+            allocate_reg();
+        }
+
+        reg2 = get_current_reg();
+        create_expression(node->opr[1]);
+
+        if (!reg_available() && get_restore_reg() == reg1) {
+            pop_temporary(reg1);
+        }
+
+        switch (node->nature) {
+            case NODE_PLUS:
+                addu_inst_create(reg, reg1, reg2);
+                break;
+            case NODE_MINUS:
+                subu_inst_create(reg, reg1, reg2);
+                break;
+            case NODE_MUL:
+                mult_inst_create(reg1, reg2);
+                mflo_inst_create(reg1);
+                break;
+            case NODE_DIV:
+                div_inst_create(reg1, reg2);
+                teq_inst_create(reg2, 0);
+                mflo_inst_create(reg1);
+                break;
+            case NODE_MOD:
+                div_inst_create(reg1, reg2);
+                teq_inst_create(reg2, 0);
+                mfhi_inst_create(reg1);
+                break;
+            case NODE_BAND:
+                and_inst_create(reg, reg1, reg2);
+                break;
+            case NODE_BOR:
+                or_inst_create(reg, reg1, reg2);
+                break;
+            case NODE_BXOR:
+                xor_inst_create(reg, reg1, reg2);
+                break;
+            case NODE_AND:
+                and_inst_create(reg, reg1, reg2);
+                break;
+            case NODE_OR:
+                or_inst_create(reg, reg1, reg2);
+                break;
+            case NODE_EQ:
+                xor_inst_create(reg1, reg1, reg2);
+                sltiu_inst_create(reg1, reg1, 1);
+                break;
+            case NODE_NE:
+                xor_inst_create(reg1, reg1, reg2);
+                sltu_inst_create(reg1, 0, reg1);
+                break;
+            case NODE_LT:
+                slt_inst_create(reg1, reg1, reg2);
+                break;
+            case NODE_GT:
+                slt_inst_create(reg1, reg2, reg1);
+                break;
+            case NODE_LE:
+                slt_inst_create(reg1, reg2, reg1);
+                xori_inst_create(reg1, reg1, 1);
+                break;
+            case NODE_GE:
+                slt_inst_create(reg1, reg1, reg2);
+                xori_inst_create(reg1, reg1, 1);
+                break;
+            case NODE_SLL:
+                sllv_inst_create(reg, reg1, reg2);
+                break;
+            case NODE_SRL:
+                srlv_inst_create(reg, reg1, reg2);
+                break;
+            case NODE_SRA:
+                srav_inst_create(reg, reg1, reg2);
+                break;
+            case NODE_NOT:
+                nor_inst_create(reg, 0, reg1);
+                break;
+            case NODE_UMINUS:
+                subu_inst_create(reg, 0, reg1);
+                break;
+            case NODE_BNOT:
+                xori_inst_create(reg, reg1, 1);
+                break;
+        }
+
+        if (reg_available()) {
+            release_reg();
+        }
     }
 }
 
