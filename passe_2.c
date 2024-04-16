@@ -71,7 +71,7 @@ void parcours_gen(node_t node) {
             break;
 
         default:
-            fprintf(stderr, "Error line %d: Unknown node type in generation\n", node->lineno);
+            fprintf(stderr, "Error line %d: Unknown node type.\n", node->lineno);
             exit(1);
             break;
     }
@@ -99,7 +99,7 @@ void create_print(node_t node) {
                     }
                 }
                 else {
-                    fprintf(stderr, "Error line %d: Undeclared variable %s.\n", node->lineno, node->ident);
+                    fprintf(stderr, "Error line %d: Undeclared variable \'%s\'.\n", node->lineno, node->ident);
                     exit(1);
                 }
                 ori_inst_create(2, 0, 1);
@@ -196,11 +196,10 @@ void create_instruction(node_t node) {
                 }
             }
             else {
-                fprintf(stderr, "Error line %d: Undeclared variable %s.\n", node->lineno, node->opr[0]->ident);
+                fprintf(stderr, "Error line %d: Undeclared variable \'%s\'.\n", node->lineno, node->opr[0]->ident);
                 exit(1);
             }
             break;
-
 
         default:
             fprintf(stderr, "Error line %d: Unknown instruction type in generation.\n", node->lineno);
@@ -228,7 +227,7 @@ void create_expression(node_t node) {
             }
         }
         else {
-            fprintf(stderr, "Error line %d: Undeclared variable %s.\n", node->lineno, node->ident);
+            fprintf(stderr, "Error line %d: Undeclared variable \'%s\'.\n", node->lineno, node->ident);
             exit(1);
         }
 

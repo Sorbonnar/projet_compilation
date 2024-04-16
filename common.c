@@ -21,41 +21,60 @@ extern bool stop_after_syntax;
 extern bool stop_after_verif;
 
 void affiche_utilisation() {
-    printf("Usage: minicc [options] <source_file>\n");
+    printf("Usage: ./minicc [options] <source_file_to_compile>\n\n");
     printf("Options:\n");
-    printf("  -b\t\tDisplay the compiler banner (name of the compiler members of the project)\n");
-    printf("  -o <filename>\tSets the name of the produced assembly file (default: out.s)\n");
-    printf("  -t <level>\tSets the trace level to use (between 0 and 5 with 0 : no trace and 5 : all traces; default : 0)\n");
-    printf("  -r <count>\tSets the maximum number of registers to use (between 4 and 8; default : 8)\n");
+    printf("  -b\t\tDisplay the compiler banner\n");
+    printf("  -o <filename>\tSets outfile name (default : out.s)\n");
+    printf("  -t <level>\tSets trace level between 0 and 5 (default : 0 = none; 5 = all)\n");
+    printf("  -r <count>\tSets maximum number of registers to use between 4 and 8 (default : 8)\n");
     printf("  -s\t\tStop compiling after parsing (default : no)\n");
     printf("  -v\t\tStop compiling after the verifications pass (default : no)\n");
-    printf("  -h\t\tDisplay the list of options and stop parsing the arguments\n");
+    printf("  -h\t\tDisplay help\n");
+    printf("\nRules:\n");
+    printf("  <source_file_to_compile> is required\n");
+    printf("  Option -b is incompatible with every other options\n");
+    printf("  Option -o must be followed by a filename\n");
+    printf("  Trace level must be between 0 and 5\n");
+    printf("  Number of registers must be between 4 and 8\n");
+    printf("  Options -s and -v are incompatible\n");
+    printf("\n");
+
     exit(1);
 }
 
 
-void parse_args(int argc, char ** argv) {
+void parse_args(int argc, char **argv) {
     int arg_index = 1;
+    bool b_option_used = false;
+    int fichier_sortie = 0;
 
     while (argv[arg_index] != NULL) {
         char* arg = argv[arg_index];
-        arg_index++;
 
         if (strcmp(arg, "-b") == 0) {
+            if (argc > 2) {
+                fprintf(stderr, "\nError: -b option cannot be used with any other options\n");
+                exit(1);
+            }
+            printf("\n####################################################################\n");
             printf("####################################################################\n");
             printf("############################# COMPILAR #############################\n");
             printf("####################################################################\n");
             printf("################# MOHAMED GHAIBOUCHE - KARIM QORAR #################\n");
             printf("####################################################################\n");
+            printf("####################################################################\n\n");
             exit(0);
         }
-        else if (strcmp(arg, "-o") == 0) {
+
+        arg_index++;
+
+        if (strcmp(arg, "-o") == 0) {
             if (arg_index < argc) {
                 outfile = strdupl(argv[arg_index]);
                 arg_index++;
             }
             else {
-                fprintf(stderr, "Error: missing argument for -o option\n");
+                fprintf(stderr, "\nError: missing argument for -o option\n\n");
                 affiche_utilisation();
                 exit(1);
             }
@@ -66,13 +85,13 @@ void parse_args(int argc, char ** argv) {
                 arg_index++;
                 trace_level = atoi(argos);
                 if (trace_level < 0 || trace_level > 5) {
-                    fprintf(stderr, "Error: trace level must be between 0 and 5\n");
+                    fprintf(stderr, "\nError: trace level must be between 0 and 5\n\n");
                     affiche_utilisation();
                     exit(1);
                 }
             }
             else {
-                fprintf(stderr, "Error: missing argument for -t option\n");
+                fprintf(stderr, "\nError: missing argument for -t option\n\n");
                 affiche_utilisation();
                 exit(1);
             }
@@ -83,33 +102,51 @@ void parse_args(int argc, char ** argv) {
                 arg_index++;
                 int max_regs = atoi(argos);
                 if (max_regs < 4 || max_regs > 8) {
-                    fprintf(stderr, "Error: number of registers must be between 4 and 8\n");
+                    fprintf(stderr, "\nError: number of registers must be between 4 and 8\n\n");
                     affiche_utilisation();
                     exit(1);
                 }
                 set_max_registers(max_regs);
             }
             else {
-                fprintf(stderr, "Error: missing argument for -r option\n");
+                fprintf(stderr, "\nError: missing argument for -r option\n\n");
                 affiche_utilisation();
                 exit(1);
             }
         }
         else if (strcmp(arg, "-s") == 0) {
+            if (stop_after_verif) {
+                fprintf(stderr, "\nError: -s and -v options are incompatible\n\n");
+                affiche_utilisation();
+                exit(1);
+            }
             stop_after_syntax = true;
         }
         else if (strcmp(arg, "-v") == 0) {
+            if (stop_after_syntax) {
+                fprintf(stderr, "\nError: -s and -v options are incompatible\n\n");
+                affiche_utilisation();
+                exit(1);
+            }
             stop_after_verif = true;
         }
         else if (strcmp(arg, "-h") == 0) {
             affiche_utilisation();
+            exit(0);
         }
         else if (strcmp(arg + strlen(arg) - 2, ".c") == 0) {
+            if (fichier_sortie > 0) {
+                fprintf(stderr, "\nError: Multiple .c files specified\n\n");
+                affiche_utilisation();
+                exit(1);
+            }
             infile = arg;
+            fichier_sortie++;
         }
         else {
-            fprintf(stderr, "Error: unknown option %s\n", arg);
+            fprintf(stderr, "\nError: unknown option %s\n\n", arg);
             affiche_utilisation();
+            exit(1);
         }
     }
 }
