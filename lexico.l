@@ -43,7 +43,7 @@ ENTIER_HEXA     0x({CHIFFRE}|{LETTRE_HEXA})+
 ENTIER          {ENTIER_DEC}|{ENTIER_HEXA}
 CHAINE_CAR      [^"\\]
 CHAINE          \"({CHAINE_CAR}|\\\"|\\n)*\"
-COMMENTAIRE     "//"[^"\\'\n']*
+COMMENTAIRE     "//".*
 IDF             {LETTRE}({LETTRE}|{CHIFFRE}|_)*
 
 %%

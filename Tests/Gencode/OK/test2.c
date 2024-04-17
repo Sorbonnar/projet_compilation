@@ -1,9 +1,8 @@
-int intos = 10;
-bool boolustre = false;
+int int1 = 10;
 
 void main() {
     int a = 5;
-    int b = intos;
+    int b = int1;
     int i;
     bool c = true;
     
