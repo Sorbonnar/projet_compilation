@@ -740,7 +740,8 @@ node_t make_node(node_nature nature, int nops, ...) {
             fprintf(stderr, "Error line %d: malloc error\n", yylineno);
             exit(1);
         }
-    } else {
+    }
+    else {
         node->opr = NULL;
     }
 
@@ -796,7 +797,8 @@ node_t make_terminal_node(node_nature nature, ...) {
 
         case NODE_INTVAL:
         case NODE_BOOLVAL:
-            node->value = va_arg(args, int);
+            int64_t value = va_arg(args, int64_t);
+            node->value = value;
             break;
             
         default:
@@ -838,7 +840,7 @@ void yyerror(node_t * program_root, char * s) {
     fprintf(stderr, "Error line %d: %s\n", yylineno, s);
     exit(1);
 }
-#line 842 "y.tab.c"
+#line 844 "y.tab.c"
 
 /* For use in generated program */
 #define yydepth (int)(yystack.s_mark - yystack.s_base)
@@ -1511,499 +1513,499 @@ yyreduce:
 case 1:
 #line 72 "grammar.y"
 	{
-            printf_level(5, "program rule : Global declarations\n");
+            printf_level(5, "program rule \t\t: Global declarations\n");
             yyval.ptr = make_node(NODE_PROGRAM, 2, yystack.l_mark[-1].ptr, yystack.l_mark[0].ptr);
             *program_root = yyval.ptr;
         }
-#line 1519 "y.tab.c"
+#line 1521 "y.tab.c"
 break;
 case 2:
 #line 78 "grammar.y"
 	{
-            printf_level(5, "program rule : No global declarations\n");
+            printf_level(5, "program rule \t\t: No global declarations\n");
             yyval.ptr = make_node(NODE_PROGRAM, 2, NULL, yystack.l_mark[0].ptr);
             *program_root = yyval.ptr;
         }
-#line 1528 "y.tab.c"
+#line 1530 "y.tab.c"
 break;
 case 3:
 #line 87 "grammar.y"
 	{
-            printf_level(5, "listdecl rule : ");
+            printf_level(5, "listdecl rule \t\t: ");
             yyval.ptr = yystack.l_mark[0].ptr;
         }
-#line 1536 "y.tab.c"
+#line 1538 "y.tab.c"
 break;
 case 4:
 #line 92 "grammar.y"
 	{ 
             yyval.ptr = NULL;
         }
-#line 1543 "y.tab.c"
+#line 1545 "y.tab.c"
 break;
 case 5:
 #line 99 "grammar.y"
 	{ 
-            printf_level(5, "listdeclnonnull rule : ");
+            printf_level(5, "listdeclnonnull rule \t: ");
             yyval.ptr = yystack.l_mark[0].ptr;
         }
-#line 1551 "y.tab.c"
+#line 1553 "y.tab.c"
 break;
 case 6:
 #line 104 "grammar.y"
 	{ 
-            printf_level(5, "listdeclnonnull rule : Several declarations\n");
+            printf_level(5, "listdeclnonnull rule \t: Several declarations\n");
             yyval.ptr = make_node(NODE_LIST, 2, yystack.l_mark[-1].ptr, yystack.l_mark[0].ptr);
         }
-#line 1559 "y.tab.c"
+#line 1561 "y.tab.c"
 break;
 case 7:
 #line 112 "grammar.y"
 	{ 
-            printf_level(5, "vardecl rule : Variable declaration\n");
+            printf_level(5, "vardecl rule \t\t: Variable declaration\n");
             yyval.ptr = make_node(NODE_DECLS, 2, yystack.l_mark[-2].ptr, yystack.l_mark[-1].ptr);
         }
-#line 1567 "y.tab.c"
+#line 1569 "y.tab.c"
 break;
 case 8:
 #line 120 "grammar.y"
 	{ 
-            printf_level(5, "listtypedecl rule : ");
+            printf_level(5, "listtypedecl rule \t: ");
             yyval.ptr = yystack.l_mark[0].ptr;
         }
-#line 1575 "y.tab.c"
+#line 1577 "y.tab.c"
 break;
 case 9:
 #line 125 "grammar.y"
 	{ 
-            printf_level(5, "listtypedecl rule : Several declarations\n");
+            printf_level(5, "listtypedecl rule \t: Several declarations\n");
             yyval.ptr = make_node(NODE_LIST, 2, yystack.l_mark[-2].ptr, yystack.l_mark[0].ptr);
         }
-#line 1583 "y.tab.c"
+#line 1585 "y.tab.c"
 break;
 case 10:
 #line 133 "grammar.y"
 	{ 
-            printf_level(5, "decl rule : NULL declaration\n");
+            printf_level(5, "decl rule \t\t: NULL declaration\n");
             yyval.ptr = make_node(NODE_DECL, 2, yystack.l_mark[0].ptr, NULL);
         }
-#line 1591 "y.tab.c"
+#line 1593 "y.tab.c"
 break;
 case 11:
 #line 138 "grammar.y"
 	{ 
-            printf_level(5, "decl rule : Declaration with affectation\n");
+            printf_level(5, "decl rule \t\t: Declaration with affectation\n");
             yyval.ptr = make_node(NODE_DECL, 2, yystack.l_mark[-2].ptr, yystack.l_mark[0].ptr);
         }
-#line 1599 "y.tab.c"
+#line 1601 "y.tab.c"
 break;
 case 12:
 #line 146 "grammar.y"
 	{ 
-            printf_level(5, "maindecl rule : main function\n");
+            printf_level(5, "maindecl rule \t\t: main function\n");
             yyval.ptr = make_node(NODE_FUNC, 3, yystack.l_mark[-4].ptr, yystack.l_mark[-3].ptr, yystack.l_mark[0].ptr);
         }
-#line 1607 "y.tab.c"
+#line 1609 "y.tab.c"
 break;
 case 13:
 #line 154 "grammar.y"
 	{ 
-            printf_level(5, "type rule : Int\n");
+            printf_level(5, "type rule \t\t: Int\n");
             yyval.ptr = make_terminal_node(NODE_TYPE, 0);
         }
-#line 1615 "y.tab.c"
+#line 1617 "y.tab.c"
 break;
 case 14:
 #line 159 "grammar.y"
 	{ 
-            printf_level(5, "type rule : Bool\n");
+            printf_level(5, "type rule \t\t: Bool\n");
             yyval.ptr = make_terminal_node(NODE_TYPE, 1);
         }
-#line 1623 "y.tab.c"
+#line 1625 "y.tab.c"
 break;
 case 15:
 #line 164 "grammar.y"
 	{ 
-            printf_level(5, "type rule : Void\n");
+            printf_level(5, "type rule \t\t: Void\n");
             yyval.ptr = make_terminal_node(NODE_TYPE, 2);
         }
-#line 1631 "y.tab.c"
+#line 1633 "y.tab.c"
 break;
 case 16:
 #line 172 "grammar.y"
 	{ 
-            printf_level(5, "listinst rule : ");
+            printf_level(5, "listinst rule \t\t: ");
             yyval.ptr = yystack.l_mark[0].ptr;
         }
-#line 1639 "y.tab.c"
+#line 1641 "y.tab.c"
 break;
 case 17:
 #line 177 "grammar.y"
 	{ 
             yyval.ptr = NULL;
         }
-#line 1646 "y.tab.c"
+#line 1648 "y.tab.c"
 break;
 case 18:
 #line 184 "grammar.y"
 	{ 
-            printf_level(5, "listinstnonnull rule : ");
+            printf_level(5, "listinstnonnull rule \t: ");
             yyval.ptr = yystack.l_mark[0].ptr;
         }
-#line 1654 "y.tab.c"
+#line 1656 "y.tab.c"
 break;
 case 19:
 #line 189 "grammar.y"
 	{ 
-            printf_level(5, "listinstnonnull rule : Several instructions\n");
+            printf_level(5, "listinstnonnull rule \t: Several instructions\n");
             yyval.ptr = make_node(NODE_LIST, 2, yystack.l_mark[-1].ptr, yystack.l_mark[0].ptr);
         }
-#line 1662 "y.tab.c"
+#line 1664 "y.tab.c"
 break;
 case 20:
 #line 197 "grammar.y"
 	{
-            printf_level(5, "inst rule : ");
+            printf_level(5, "inst rule \t\t: ");
             yyval.ptr = yystack.l_mark[-1].ptr;
         }
-#line 1670 "y.tab.c"
+#line 1672 "y.tab.c"
 break;
 case 21:
 #line 202 "grammar.y"
 	{ 
-            printf_level(5, "inst rule : If else\n");
+            printf_level(5, "inst rule \t\t: If else\n");
             yyval.ptr = make_node(NODE_IF, 3, yystack.l_mark[-4].ptr, yystack.l_mark[-2].ptr, yystack.l_mark[0].ptr);
         }
-#line 1678 "y.tab.c"
+#line 1680 "y.tab.c"
 break;
 case 22:
 #line 207 "grammar.y"
 	{ 
-            printf_level(5, "inst rule : If\n");
+            printf_level(5, "inst rule \t\t: If\n");
             yyval.ptr = make_node(NODE_IF, 2, yystack.l_mark[-2].ptr, yystack.l_mark[0].ptr);
         }
-#line 1686 "y.tab.c"
+#line 1688 "y.tab.c"
 break;
 case 23:
 #line 212 "grammar.y"
 	{ 
-            printf_level(5, "inst rule : While\n");
+            printf_level(5, "inst rule \t\t: While\n");
             yyval.ptr = make_node(NODE_WHILE, 2, yystack.l_mark[-2].ptr, yystack.l_mark[0].ptr);
         }
-#line 1694 "y.tab.c"
+#line 1696 "y.tab.c"
 break;
 case 24:
 #line 217 "grammar.y"
 	{ 
-            printf_level(5, "inst rule : For\n");
+            printf_level(5, "inst rule \t\t: For\n");
             yyval.ptr = make_node(NODE_FOR, 4, yystack.l_mark[-6].ptr, yystack.l_mark[-4].ptr, yystack.l_mark[-2].ptr, yystack.l_mark[0].ptr);
         }
-#line 1702 "y.tab.c"
+#line 1704 "y.tab.c"
 break;
 case 25:
 #line 222 "grammar.y"
 	{ 
-            printf_level(5, "inst rule : Do while\n");
+            printf_level(5, "inst rule \t\t: Do while\n");
             yyval.ptr = make_node(NODE_DOWHILE, 2, yystack.l_mark[-5].ptr, yystack.l_mark[-2].ptr);
         }
-#line 1710 "y.tab.c"
+#line 1712 "y.tab.c"
 break;
 case 26:
 #line 227 "grammar.y"
 	{ 
-            printf_level(5, "inst rule : ");
+            printf_level(5, "inst rule \t\t: ");
             yyval.ptr = yystack.l_mark[0].ptr;
         }
-#line 1718 "y.tab.c"
+#line 1720 "y.tab.c"
 break;
 case 27:
 #line 232 "grammar.y"
 	{ 
             yyval.ptr = NULL;
         }
-#line 1725 "y.tab.c"
+#line 1727 "y.tab.c"
 break;
 case 28:
 #line 236 "grammar.y"
 	{ 
-            printf_level(5, "inst rule : Print\n");
+            printf_level(5, "inst rule \t\t: Print\n");
             yyval.ptr = make_node(NODE_PRINT, 1, yystack.l_mark[-2].ptr);
         }
-#line 1733 "y.tab.c"
+#line 1735 "y.tab.c"
 break;
 case 29:
 #line 244 "grammar.y"
 	{
-            printf_level(5, "block rule : Block\n");
+            printf_level(5, "block rule \t\t: Block\n");
             yyval.ptr = make_node(NODE_BLOCK, 2, yystack.l_mark[-2].ptr, yystack.l_mark[-1].ptr);
         }
-#line 1741 "y.tab.c"
+#line 1743 "y.tab.c"
 break;
 case 30:
 #line 252 "grammar.y"
 	{
-            printf_level(5, "expr rule : Multiplication\n");
+            printf_level(5, "expr rule \t\t: Multiplication\n");
             yyval.ptr = make_node(NODE_MUL, 2, yystack.l_mark[-2].ptr, yystack.l_mark[0].ptr);
         }
-#line 1749 "y.tab.c"
+#line 1751 "y.tab.c"
 break;
 case 31:
 #line 257 "grammar.y"
 	{ 
-            printf_level(5, "expr rule : Division\n");
+            printf_level(5, "expr rule \t\t: Division\n");
             yyval.ptr = make_node(NODE_DIV, 2, yystack.l_mark[-2].ptr, yystack.l_mark[0].ptr);
         }
-#line 1757 "y.tab.c"
+#line 1759 "y.tab.c"
 break;
 case 32:
 #line 262 "grammar.y"
 	{ 
-            printf_level(5, "expr rule : Addition\n");
+            printf_level(5, "expr rule \t\t: Addition\n");
             yyval.ptr = make_node(NODE_PLUS, 2, yystack.l_mark[-2].ptr, yystack.l_mark[0].ptr);
         }
-#line 1765 "y.tab.c"
+#line 1767 "y.tab.c"
 break;
 case 33:
 #line 267 "grammar.y"
 	{ 
-            printf_level(5, "expr rule : Subtraction\n");
+            printf_level(5, "expr rule \t\t: Subtraction\n");
             yyval.ptr = make_node(NODE_MINUS, 2, yystack.l_mark[-2].ptr, yystack.l_mark[0].ptr);
         }
-#line 1773 "y.tab.c"
+#line 1775 "y.tab.c"
 break;
 case 34:
 #line 272 "grammar.y"
 	{ 
-            printf_level(5, "expr rule : Modulo\n");
+            printf_level(5, "expr rule \t\t: Modulo\n");
             yyval.ptr = make_node(NODE_MOD, 2, yystack.l_mark[-2].ptr, yystack.l_mark[0].ptr);
         }
-#line 1781 "y.tab.c"
+#line 1783 "y.tab.c"
 break;
 case 35:
 #line 277 "grammar.y"
 	{ 
-            printf_level(5, "expr rule : Less than\n");
+            printf_level(5, "expr rule \t\t: Less than\n");
             yyval.ptr = make_node(NODE_LT, 2, yystack.l_mark[-2].ptr, yystack.l_mark[0].ptr);
         }
-#line 1789 "y.tab.c"
+#line 1791 "y.tab.c"
 break;
 case 36:
 #line 282 "grammar.y"
 	{ 
-            printf_level(5, "expr rule : Greater than\n");
+            printf_level(5, "expr rule \t\t: Greater than\n");
             yyval.ptr = make_node(NODE_GT, 2, yystack.l_mark[-2].ptr, yystack.l_mark[0].ptr);
         }
-#line 1797 "y.tab.c"
+#line 1799 "y.tab.c"
 break;
 case 37:
 #line 287 "grammar.y"
 	{ 
-            printf_level(5, "expr rule : Unary minus\n");
+            printf_level(5, "expr rule \t\t: Unary minus\n");
             yyval.ptr = make_node(NODE_UMINUS, 1, yystack.l_mark[0].ptr);
         }
-#line 1805 "y.tab.c"
+#line 1807 "y.tab.c"
 break;
 case 38:
 #line 292 "grammar.y"
 	{ 
-            printf_level(5, "expr rule : Greater or equal\n");
+            printf_level(5, "expr rule \t\t: Greater or equal\n");
             yyval.ptr = make_node(NODE_GE, 2, yystack.l_mark[-2].ptr, yystack.l_mark[0].ptr);
         }
-#line 1813 "y.tab.c"
+#line 1815 "y.tab.c"
 break;
 case 39:
 #line 297 "grammar.y"
 	{ 
-            printf_level(5, "expr rule : Less or equal\n");
+            printf_level(5, "expr rule \t\t: Less or equal\n");
             yyval.ptr = make_node(NODE_LE, 2, yystack.l_mark[-2].ptr, yystack.l_mark[0].ptr);
         }
-#line 1821 "y.tab.c"
+#line 1823 "y.tab.c"
 break;
 case 40:
 #line 302 "grammar.y"
 	{ 
-            printf_level(5, "expr rule : Equal\n");
+            printf_level(5, "expr rule \t\t: Equal\n");
             yyval.ptr = make_node(NODE_EQ, 2, yystack.l_mark[-2].ptr, yystack.l_mark[0].ptr);
         }
-#line 1829 "y.tab.c"
+#line 1831 "y.tab.c"
 break;
 case 41:
 #line 307 "grammar.y"
 	{ 
-            printf_level(5, "expr rule : Not equal\n");
+            printf_level(5, "expr rule \t\t: Not equal\n");
             yyval.ptr = make_node(NODE_NE, 2, yystack.l_mark[-2].ptr, yystack.l_mark[0].ptr);
         }
-#line 1837 "y.tab.c"
+#line 1839 "y.tab.c"
 break;
 case 42:
 #line 312 "grammar.y"
 	{ 
-            printf_level(5, "expr rule : And\n");
+            printf_level(5, "expr rule \t\t: And\n");
             yyval.ptr = make_node(NODE_AND, 2, yystack.l_mark[-2].ptr, yystack.l_mark[0].ptr);
         }
-#line 1845 "y.tab.c"
+#line 1847 "y.tab.c"
 break;
 case 43:
 #line 317 "grammar.y"
 	{ 
-            printf_level(5, "expr rule : Or\n");
+            printf_level(5, "expr rule \t\t: Or\n");
             yyval.ptr = make_node(NODE_OR, 2, yystack.l_mark[-2].ptr, yystack.l_mark[0].ptr);
         }
-#line 1853 "y.tab.c"
+#line 1855 "y.tab.c"
 break;
 case 44:
 #line 322 "grammar.y"
 	{ 
-            printf_level(5, "expr rule : Band\n");
+            printf_level(5, "expr rule \t\t: Band\n");
             yyval.ptr = make_node(NODE_BAND, 2, yystack.l_mark[-2].ptr, yystack.l_mark[0].ptr);
         }
-#line 1861 "y.tab.c"
+#line 1863 "y.tab.c"
 break;
 case 45:
 #line 327 "grammar.y"
 	{ 
-            printf_level(5, "expr rule : Bor\n");
+            printf_level(5, "expr rule \t\t: Bor\n");
             yyval.ptr = make_node(NODE_BOR, 2, yystack.l_mark[-2].ptr, yystack.l_mark[0].ptr);
         }
-#line 1869 "y.tab.c"
+#line 1871 "y.tab.c"
 break;
 case 46:
 #line 332 "grammar.y"
 	{ 
-            printf_level(5, "expr rule : Bxor\n");
+            printf_level(5, "expr rule \t\t: Bxor\n");
             yyval.ptr = make_node(NODE_BXOR, 2, yystack.l_mark[-2].ptr, yystack.l_mark[0].ptr);
         }
-#line 1877 "y.tab.c"
+#line 1879 "y.tab.c"
 break;
 case 47:
 #line 337 "grammar.y"
 	{ 
-            printf_level(5, "expr rule : Shift right logical\n");
+            printf_level(5, "expr rule \t\t: Shift right logical\n");
             yyval.ptr = make_node(NODE_SRL, 2, yystack.l_mark[-2].ptr, yystack.l_mark[0].ptr);
         }
-#line 1885 "y.tab.c"
+#line 1887 "y.tab.c"
 break;
 case 48:
 #line 342 "grammar.y"
 	{ 
-            printf_level(5, "expr rule : Shift right arithmetic\n");
+            printf_level(5, "expr rule \t\t: Shift right arithmetic\n");
             yyval.ptr = make_node(NODE_SRA, 2, yystack.l_mark[-2].ptr, yystack.l_mark[0].ptr);
         }
-#line 1893 "y.tab.c"
+#line 1895 "y.tab.c"
 break;
 case 49:
 #line 347 "grammar.y"
 	{ 
-            printf_level(5, "expr rule : Shift left logical\n");
+            printf_level(5, "expr rule \t\t: Shift left logical\n");
             yyval.ptr = make_node(NODE_SLL, 2, yystack.l_mark[-2].ptr, yystack.l_mark[0].ptr);
         }
-#line 1901 "y.tab.c"
+#line 1903 "y.tab.c"
 break;
 case 50:
 #line 352 "grammar.y"
 	{ 
-            printf_level(5, "expr rule : Not\n");
+            printf_level(5, "expr rule \t\t: Not\n");
             yyval.ptr = make_node(NODE_NOT, 1, yystack.l_mark[0].ptr);
         }
-#line 1909 "y.tab.c"
+#line 1911 "y.tab.c"
 break;
 case 51:
 #line 357 "grammar.y"
 	{ 
-            printf_level(5, "expr rule : Bnot\n");
+            printf_level(5, "expr rule \t\t: Bnot\n");
             yyval.ptr = make_node(NODE_BNOT, 1, yystack.l_mark[0].ptr);
         }
-#line 1917 "y.tab.c"
+#line 1919 "y.tab.c"
 break;
 case 52:
 #line 362 "grammar.y"
 	{ 
-            printf_level(5, "expr rule : Parenthesis\n");
+            printf_level(5, "expr rule \t\t: Parenthesis\n");
             yyval.ptr = yystack.l_mark[-1].ptr;
         }
-#line 1925 "y.tab.c"
+#line 1927 "y.tab.c"
 break;
 case 53:
 #line 367 "grammar.y"
 	{
-            printf_level(5, "expr rule : Affectation\n");
+            printf_level(5, "expr rule \t\t: Affectation\n");
             yyval.ptr = make_node(NODE_AFFECT, 2, yystack.l_mark[-2].ptr, yystack.l_mark[0].ptr);
         }
-#line 1933 "y.tab.c"
+#line 1935 "y.tab.c"
 break;
 case 54:
 #line 372 "grammar.y"
 	{ 
-            printf_level(5, "expr rule : Int value\n");
+            printf_level(5, "expr rule \t\t: Int value\n");
             yyval.ptr = make_terminal_node(NODE_INTVAL, yystack.l_mark[0].intval);
         }
-#line 1941 "y.tab.c"
+#line 1943 "y.tab.c"
 break;
 case 55:
 #line 377 "grammar.y"
 	{ 
-            printf_level(5, "expr rule : Bool value\n");
+            printf_level(5, "expr rule \t\t: Bool value\n");
             yyval.ptr = make_terminal_node(NODE_BOOLVAL, 1);
         }
-#line 1949 "y.tab.c"
+#line 1951 "y.tab.c"
 break;
 case 56:
 #line 382 "grammar.y"
 	{ 
-            printf_level(5, "expr rule : Bool value\n");
+            printf_level(5, "expr rule \t\t: Bool value\n");
             yyval.ptr = make_terminal_node(NODE_BOOLVAL, 0);
         }
-#line 1957 "y.tab.c"
+#line 1959 "y.tab.c"
 break;
 case 57:
 #line 387 "grammar.y"
 	{ 
-            printf_level(5, "expr rule : ");
+            printf_level(5, "expr rule \t\t: ");
             yyval.ptr = yystack.l_mark[0].ptr;
         }
-#line 1965 "y.tab.c"
+#line 1967 "y.tab.c"
 break;
 case 58:
 #line 395 "grammar.y"
 	{ 
-            printf_level(5, "listparamprint rule : Several parameters\n");
+            printf_level(5, "listparamprint rule \t: Several parameters\n");
             yyval.ptr = make_node(NODE_LIST, 2, yystack.l_mark[-2].ptr, yystack.l_mark[0].ptr);
         }
-#line 1973 "y.tab.c"
+#line 1975 "y.tab.c"
 break;
 case 59:
 #line 400 "grammar.y"
 	{ 
-            printf_level(5, "listparamprint rule : ");
+            printf_level(5, "listparamprint rule \t: ");
             yyval.ptr = yystack.l_mark[0].ptr;
         }
-#line 1981 "y.tab.c"
+#line 1983 "y.tab.c"
 break;
 case 60:
 #line 408 "grammar.y"
 	{ 
-            printf_level(5, "paramprint rule : ");
+            printf_level(5, "paramprint rule \t: ");
             yyval.ptr = yystack.l_mark[0].ptr;
         }
-#line 1989 "y.tab.c"
+#line 1991 "y.tab.c"
 break;
 case 61:
 #line 413 "grammar.y"
 	{ 
-            printf_level(5, "paramprint rule : String\n");
+            printf_level(5, "paramprint rule \t: String\n");
             yyval.ptr = make_terminal_node(NODE_STRINGVAL, yystack.l_mark[0].strval);
         }
-#line 1997 "y.tab.c"
+#line 1999 "y.tab.c"
 break;
 case 62:
 #line 421 "grammar.y"
 	{ 
-            printf_level(5, "ident rule : Identifier\n");
+            printf_level(5, "ident rule \t\t: Identifier\n");
             yyval.ptr = make_terminal_node(NODE_IDENT, yystack.l_mark[0].strval);
         }
-#line 2005 "y.tab.c"
-break;
 #line 2007 "y.tab.c"
+break;
+#line 2009 "y.tab.c"
     default:
         break;
     }

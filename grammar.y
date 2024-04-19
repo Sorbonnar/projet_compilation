@@ -70,13 +70,13 @@ node_t make_terminal_node(node_nature nature, ...);
 program:
         listdeclnonnull maindecl
         {
-            printf_level(5, "program rule : Global declarations\n");
+            printf_level(5, "program rule \t\t: Global declarations\n");
             $$ = make_node(NODE_PROGRAM, 2, $1, $2);
             *program_root = $$;
         }
         | maindecl
         {
-            printf_level(5, "program rule : No global declarations\n");
+            printf_level(5, "program rule \t\t: No global declarations\n");
             $$ = make_node(NODE_PROGRAM, 2, NULL, $1);
             *program_root = $$;
         }
@@ -85,7 +85,7 @@ program:
 listdecl:
         listdeclnonnull
         {
-            printf_level(5, "listdecl rule : ");
+            printf_level(5, "listdecl rule \t\t: ");
             $$ = $1;
         }
         |
@@ -97,12 +97,12 @@ listdecl:
 listdeclnonnull:
         vardecl
         { 
-            printf_level(5, "listdeclnonnull rule : ");
+            printf_level(5, "listdeclnonnull rule \t: ");
             $$ = $1;
         }
         | listdeclnonnull vardecl
         { 
-            printf_level(5, "listdeclnonnull rule : Several declarations\n");
+            printf_level(5, "listdeclnonnull rule \t: Several declarations\n");
             $$ = make_node(NODE_LIST, 2, $1, $2);
         }
         ;
@@ -110,7 +110,7 @@ listdeclnonnull:
 vardecl:
         type listtypedecl TOK_SEMICOL
         { 
-            printf_level(5, "vardecl rule : Variable declaration\n");
+            printf_level(5, "vardecl rule \t\t: Variable declaration\n");
             $$ = make_node(NODE_DECLS, 2, $1, $2);
         }
         ;
@@ -118,12 +118,12 @@ vardecl:
 listtypedecl:
         decl
         { 
-            printf_level(5, "listtypedecl rule : ");
+            printf_level(5, "listtypedecl rule \t: ");
             $$ = $1;
         }
         | listtypedecl TOK_COMMA decl
         { 
-            printf_level(5, "listtypedecl rule : Several declarations\n");
+            printf_level(5, "listtypedecl rule \t: Several declarations\n");
             $$ = make_node(NODE_LIST, 2, $1, $3);
         }
         ;
@@ -131,12 +131,12 @@ listtypedecl:
 decl:
         ident
         { 
-            printf_level(5, "decl rule : NULL declaration\n");
+            printf_level(5, "decl rule \t\t: NULL declaration\n");
             $$ = make_node(NODE_DECL, 2, $1, NULL);
         }
         | ident TOK_AFFECT expr
         { 
-            printf_level(5, "decl rule : Declaration with affectation\n");
+            printf_level(5, "decl rule \t\t: Declaration with affectation\n");
             $$ = make_node(NODE_DECL, 2, $1, $3);
         }
         ;
@@ -144,7 +144,7 @@ decl:
 maindecl:
         type ident TOK_LPAR TOK_RPAR block
         { 
-            printf_level(5, "maindecl rule : main function\n");
+            printf_level(5, "maindecl rule \t\t: main function\n");
             $$ = make_node(NODE_FUNC, 3, $1, $2, $5);
         }
         ;
@@ -152,17 +152,17 @@ maindecl:
 type:
         TOK_INT
         { 
-            printf_level(5, "type rule : Int\n");
+            printf_level(5, "type rule \t\t: Int\n");
             $$ = make_terminal_node(NODE_TYPE, 0);
         }
         | TOK_BOOL
         { 
-            printf_level(5, "type rule : Bool\n");
+            printf_level(5, "type rule \t\t: Bool\n");
             $$ = make_terminal_node(NODE_TYPE, 1);
         }
         | TOK_VOID
         { 
-            printf_level(5, "type rule : Void\n");
+            printf_level(5, "type rule \t\t: Void\n");
             $$ = make_terminal_node(NODE_TYPE, 2);
         }
         ;
@@ -170,7 +170,7 @@ type:
 listinst:
         listinstnonnull
         { 
-            printf_level(5, "listinst rule : ");
+            printf_level(5, "listinst rule \t\t: ");
             $$ = $1;
         }
         |
@@ -182,12 +182,12 @@ listinst:
 listinstnonnull:
         inst
         { 
-            printf_level(5, "listinstnonnull rule : ");
+            printf_level(5, "listinstnonnull rule \t: ");
             $$ = $1;
         }
         | listinstnonnull inst
         { 
-            printf_level(5, "listinstnonnull rule : Several instructions\n");
+            printf_level(5, "listinstnonnull rule \t: Several instructions\n");
             $$ = make_node(NODE_LIST, 2, $1, $2);
         }
         ;
@@ -195,37 +195,37 @@ listinstnonnull:
 inst:
         expr TOK_SEMICOL
         {
-            printf_level(5, "inst rule : ");
+            printf_level(5, "inst rule \t\t: ");
             $$ = $1;
         }
         | TOK_IF TOK_LPAR expr TOK_RPAR inst TOK_ELSE inst
         { 
-            printf_level(5, "inst rule : If else\n");
+            printf_level(5, "inst rule \t\t: If else\n");
             $$ = make_node(NODE_IF, 3, $3, $5, $7);
         }
         | TOK_IF TOK_LPAR expr TOK_RPAR inst %prec TOK_THEN
         { 
-            printf_level(5, "inst rule : If\n");
+            printf_level(5, "inst rule \t\t: If\n");
             $$ = make_node(NODE_IF, 2, $3, $5);
         }
         | TOK_WHILE TOK_LPAR expr TOK_RPAR inst
         { 
-            printf_level(5, "inst rule : While\n");
+            printf_level(5, "inst rule \t\t: While\n");
             $$ = make_node(NODE_WHILE, 2, $3, $5);
         }
         | TOK_FOR TOK_LPAR expr TOK_SEMICOL expr TOK_SEMICOL expr TOK_RPAR inst
         { 
-            printf_level(5, "inst rule : For\n");
+            printf_level(5, "inst rule \t\t: For\n");
             $$ = make_node(NODE_FOR, 4, $3, $5, $7, $9);
         }
         | TOK_DO inst TOK_WHILE TOK_LPAR expr TOK_RPAR TOK_SEMICOL
         { 
-            printf_level(5, "inst rule : Do while\n");
+            printf_level(5, "inst rule \t\t: Do while\n");
             $$ = make_node(NODE_DOWHILE, 2, $2, $5);
         }
         | block
         { 
-            printf_level(5, "inst rule : ");
+            printf_level(5, "inst rule \t\t: ");
             $$ = $1;
         }
         | TOK_SEMICOL
@@ -234,7 +234,7 @@ inst:
         }
         | TOK_PRINT TOK_LPAR listparamprint TOK_RPAR TOK_SEMICOL
         { 
-            printf_level(5, "inst rule : Print\n");
+            printf_level(5, "inst rule \t\t: Print\n");
             $$ = make_node(NODE_PRINT, 1, $3);
         }
         ;
@@ -242,7 +242,7 @@ inst:
 block:
         TOK_LACC listdecl listinst TOK_RACC
         {
-            printf_level(5, "block rule : Block\n");
+            printf_level(5, "block rule \t\t: Block\n");
             $$ = make_node(NODE_BLOCK, 2, $2, $3);
         }
         ;
@@ -250,142 +250,142 @@ block:
 expr:
         expr TOK_MUL expr
         {
-            printf_level(5, "expr rule : Multiplication\n");
+            printf_level(5, "expr rule \t\t: Multiplication\n");
             $$ = make_node(NODE_MUL, 2, $1, $3);
         }
         | expr TOK_DIV expr
         { 
-            printf_level(5, "expr rule : Division\n");
+            printf_level(5, "expr rule \t\t: Division\n");
             $$ = make_node(NODE_DIV, 2, $1, $3);
         }
         | expr TOK_PLUS expr
         { 
-            printf_level(5, "expr rule : Addition\n");
+            printf_level(5, "expr rule \t\t: Addition\n");
             $$ = make_node(NODE_PLUS, 2, $1, $3);
         }
         | expr TOK_MINUS expr
         { 
-            printf_level(5, "expr rule : Subtraction\n");
+            printf_level(5, "expr rule \t\t: Subtraction\n");
             $$ = make_node(NODE_MINUS, 2, $1, $3);
         }
         | expr TOK_MOD expr
         { 
-            printf_level(5, "expr rule : Modulo\n");
+            printf_level(5, "expr rule \t\t: Modulo\n");
             $$ = make_node(NODE_MOD, 2, $1, $3);
         }
         | expr TOK_LT expr
         { 
-            printf_level(5, "expr rule : Less than\n");
+            printf_level(5, "expr rule \t\t: Less than\n");
             $$ = make_node(NODE_LT, 2, $1, $3);
         }
         | expr TOK_GT expr
         { 
-            printf_level(5, "expr rule : Greater than\n");
+            printf_level(5, "expr rule \t\t: Greater than\n");
             $$ = make_node(NODE_GT, 2, $1, $3);
         }
         | TOK_MINUS expr %prec TOK_UMINUS
         { 
-            printf_level(5, "expr rule : Unary minus\n");
+            printf_level(5, "expr rule \t\t: Unary minus\n");
             $$ = make_node(NODE_UMINUS, 1, $2);
         }
         | expr TOK_GE expr
         { 
-            printf_level(5, "expr rule : Greater or equal\n");
+            printf_level(5, "expr rule \t\t: Greater or equal\n");
             $$ = make_node(NODE_GE, 2, $1, $3);
         }
         | expr TOK_LE expr
         { 
-            printf_level(5, "expr rule : Less or equal\n");
+            printf_level(5, "expr rule \t\t: Less or equal\n");
             $$ = make_node(NODE_LE, 2, $1, $3);
         }
         | expr TOK_EQ expr
         { 
-            printf_level(5, "expr rule : Equal\n");
+            printf_level(5, "expr rule \t\t: Equal\n");
             $$ = make_node(NODE_EQ, 2, $1, $3);
         }
         | expr TOK_NE expr
         { 
-            printf_level(5, "expr rule : Not equal\n");
+            printf_level(5, "expr rule \t\t: Not equal\n");
             $$ = make_node(NODE_NE, 2, $1, $3);
         }
         | expr TOK_AND expr
         { 
-            printf_level(5, "expr rule : And\n");
+            printf_level(5, "expr rule \t\t: And\n");
             $$ = make_node(NODE_AND, 2, $1, $3);
         }
         | expr TOK_OR expr
         { 
-            printf_level(5, "expr rule : Or\n");
+            printf_level(5, "expr rule \t\t: Or\n");
             $$ = make_node(NODE_OR, 2, $1, $3);
         }
         | expr TOK_BAND expr
         { 
-            printf_level(5, "expr rule : Band\n");
+            printf_level(5, "expr rule \t\t: Band\n");
             $$ = make_node(NODE_BAND, 2, $1, $3);
         }
         | expr TOK_BOR expr
         { 
-            printf_level(5, "expr rule : Bor\n");
+            printf_level(5, "expr rule \t\t: Bor\n");
             $$ = make_node(NODE_BOR, 2, $1, $3);
         }
         | expr TOK_BXOR expr
         { 
-            printf_level(5, "expr rule : Bxor\n");
+            printf_level(5, "expr rule \t\t: Bxor\n");
             $$ = make_node(NODE_BXOR, 2, $1, $3);
         }
         | expr TOK_SRL expr
         { 
-            printf_level(5, "expr rule : Shift right logical\n");
+            printf_level(5, "expr rule \t\t: Shift right logical\n");
             $$ = make_node(NODE_SRL, 2, $1, $3);
         }
         | expr TOK_SRA expr
         { 
-            printf_level(5, "expr rule : Shift right arithmetic\n");
+            printf_level(5, "expr rule \t\t: Shift right arithmetic\n");
             $$ = make_node(NODE_SRA, 2, $1, $3);
         }
         | expr TOK_SLL expr
         { 
-            printf_level(5, "expr rule : Shift left logical\n");
+            printf_level(5, "expr rule \t\t: Shift left logical\n");
             $$ = make_node(NODE_SLL, 2, $1, $3);
         }
         | TOK_NOT expr
         { 
-            printf_level(5, "expr rule : Not\n");
+            printf_level(5, "expr rule \t\t: Not\n");
             $$ = make_node(NODE_NOT, 1, $2);
         }
         | TOK_BNOT expr
         { 
-            printf_level(5, "expr rule : Bnot\n");
+            printf_level(5, "expr rule \t\t: Bnot\n");
             $$ = make_node(NODE_BNOT, 1, $2);
         }
         | TOK_LPAR expr TOK_RPAR
         { 
-            printf_level(5, "expr rule : Parenthesis\n");
+            printf_level(5, "expr rule \t\t: Parenthesis\n");
             $$ = $2;
         }
         | ident TOK_AFFECT expr
         {
-            printf_level(5, "expr rule : Affectation\n");
+            printf_level(5, "expr rule \t\t: Affectation\n");
             $$ = make_node(NODE_AFFECT, 2, $1, $3);
         }
         | TOK_INTVAL
         { 
-            printf_level(5, "expr rule : Int value\n");
+            printf_level(5, "expr rule \t\t: Int value\n");
             $$ = make_terminal_node(NODE_INTVAL, $1);
         }
         | TOK_TRUE
         { 
-            printf_level(5, "expr rule : Bool value\n");
+            printf_level(5, "expr rule \t\t: Bool value\n");
             $$ = make_terminal_node(NODE_BOOLVAL, 1);
         }
         | TOK_FALSE
         { 
-            printf_level(5, "expr rule : Bool value\n");
+            printf_level(5, "expr rule \t\t: Bool value\n");
             $$ = make_terminal_node(NODE_BOOLVAL, 0);
         }
         | ident
         { 
-            printf_level(5, "expr rule : ");
+            printf_level(5, "expr rule \t\t: ");
             $$ = $1;
         }
         ;
@@ -393,12 +393,12 @@ expr:
 listparamprint:
         listparamprint TOK_COMMA paramprint
         { 
-            printf_level(5, "listparamprint rule : Several parameters\n");
+            printf_level(5, "listparamprint rule \t: Several parameters\n");
             $$ = make_node(NODE_LIST, 2, $1, $3);
         }
         | paramprint
         { 
-            printf_level(5, "listparamprint rule : ");
+            printf_level(5, "listparamprint rule \t: ");
             $$ = $1;
         }
         ;
@@ -406,12 +406,12 @@ listparamprint:
 paramprint:
         ident
         { 
-            printf_level(5, "paramprint rule : ");
+            printf_level(5, "paramprint rule \t: ");
             $$ = $1;
         }
         | TOK_STRING
         { 
-            printf_level(5, "paramprint rule : String\n");
+            printf_level(5, "paramprint rule \t: String\n");
             $$ = make_terminal_node(NODE_STRINGVAL, $1);
         }
         ;
@@ -419,7 +419,7 @@ paramprint:
 ident:
         TOK_IDENT
         { 
-            printf_level(5, "ident rule : Identifier\n");
+            printf_level(5, "ident rule \t\t: Identifier\n");
             $$ = make_terminal_node(NODE_IDENT, $1);
         }
         ;
@@ -452,7 +452,8 @@ node_t make_node(node_nature nature, int nops, ...) {
             fprintf(stderr, "Error line %d: malloc error\n", yylineno);
             exit(1);
         }
-    } else {
+    }
+    else {
         node->opr = NULL;
     }
 
@@ -508,7 +509,8 @@ node_t make_terminal_node(node_nature nature, ...) {
 
         case NODE_INTVAL:
         case NODE_BOOLVAL:
-            node->value = va_arg(args, int);
+            int64_t value = va_arg(args, int64_t);
+            node->value = value;
             break;
             
         default:

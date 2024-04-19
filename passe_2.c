@@ -12,13 +12,15 @@ extern char * outfile;
 extern int trace_level;
 bool test = false;
 
-void gen_code_base(node_t node);
-void gen_code_print(node_t node);
-void gen_code_declaration(node_t node);
-void gen_code_instruction(node_t node);
-void gen_code_expression(node_t node);
+void gen_code_passe_2(node_t root); // Fonction pour démarrer la génération de code
+void gen_code_base(node_t node); // Fonction principale de génération de code
+void gen_code_print(node_t node); // Fonction pour générer le code d'affichage
+void gen_code_declaration(node_t node); // Fonction pour générer le code de déclaration
+void gen_code_instruction(node_t node); // Fonction pour générer le code d'instruction
+void gen_code_expression(node_t node); // Fonction pour générer le code d'expression
 
 void gen_code_passe_2(node_t root) {
+    printf_level(1, "\n################ Gencode Passe 2 ################\n");
 
     data_sec_inst_create();
     gen_code_declaration(root->opr[0]);
@@ -37,13 +39,13 @@ void gen_code_base(node_t node) {
 
     switch (node->nature) {
         case NODE_BLOCK:
-            printf_level(1, "gen_code_base : Exploring NODE_BLOCK\n");
+            printf_level(1, "gen_code_base \t\t: Exploring NODE_BLOCK\n");
             gen_code_declaration(node->opr[0]);
             gen_code_base(node->opr[1]);
             break;
 
         case NODE_FUNC:
-            printf_level(1, "gen_code_base : Exploring NODE_FUNC\n");
+            printf_level(1, "gen_code_base \t\t: Exploring NODE_FUNC\n");
             reset_temporary_max_offset();
             set_temporary_start_offset(node->offset);
             label_str_inst_create(node->opr[1]->ident);
@@ -52,7 +54,7 @@ void gen_code_base(node_t node) {
             break;
 
         case NODE_PRINT:
-            printf_level(1, "gen_code_base : Exploring NODE_PRINT\n");
+            printf_level(1, "gen_code_base \t\t: Exploring NODE_PRINT\n");
             gen_code_print(node);
             break;
 
@@ -69,13 +71,13 @@ void gen_code_base(node_t node) {
             break;
 
         case NODE_LIST:
-            printf_level(1, "gen_code_base : Exploring NODE_LIST\n");
+            printf_level(1, "gen_code_base \t\t: Exploring NODE_LIST\n");
             for (int i = 0; i < node->nops; i++)
                 gen_code_base(node->opr[i]);
             break;
 
         default:
-            fprintf(stderr, "Error line %d: Unknown node type.\n", node->lineno);
+            fprintf(stderr, "Error line %d: Unknown node type \'%s\' in generation.\n", node->lineno, node_nature2string(node->nature));
             exit(1);
             break;
     }
@@ -85,17 +87,16 @@ void gen_code_print(node_t node) {
     if (node == NULL) return;
 
     for (int i = 0; i < node->nops; i++) {
-        printf_level(1, "gen_code_print : ");
+        printf_level(1, "gen_code_print \t\t: ");
+        printf_level(1, "Exploring NODE_%s\n", node_nature2string(node->opr[i]->nature));
         if (node->opr[i] != NULL) {
             if (node->opr[i]->nature == NODE_STRINGVAL) {
-                printf_level(1, "Exploring NODE_STRINGVAL\n");
                 lui_inst_create(4, 0x1001);
                 ori_inst_create(4, 4, node->opr[i]->offset);
                 ori_inst_create(2, 0, 4);
                 syscall_inst_create();
             }
             else if (node->opr[i]->nature == NODE_IDENT) {
-                printf_level(1, "Exploring NODE_IDENT\n");
                 if (node->opr[i]->decl_node != NULL) {
                     if (node->opr[i]->decl_node->global_decl) {
                         lui_inst_create(4, 0x1001);
@@ -113,7 +114,6 @@ void gen_code_print(node_t node) {
                 syscall_inst_create();
             }
             else { // NODE_LIST
-                printf_level(1, "Exploring NODE_LIST\n");
                 gen_code_print(node->opr[i]);
             }
         }
@@ -124,13 +124,13 @@ void gen_code_print(node_t node) {
 void gen_code_instruction(node_t node) {
     if (node == NULL) return;
 
-    printf_level(1, "gen_code_instruction : ");
+    printf_level(1, "gen_code_instruction \t: ");
+    printf_level(1, "Exploring NODE_%s\n", node_nature2string(node->nature));
 
     int32_t reg_loop;
 
     switch (node->nature) {
         case NODE_IF:
-            printf_level(1, "Exploring NODE_IF\n");
             gen_code_expression(node->opr[0]);
 
             if (node->nops > 2) {
@@ -154,7 +154,6 @@ void gen_code_instruction(node_t node) {
             break;
 
         case NODE_WHILE:
-            printf_level(1, "Exploring NODE_WHILE\n");
             int32_t while_loop_label = get_new_label();
             int32_t end_while_loop_label = get_new_label();
 
@@ -169,7 +168,6 @@ void gen_code_instruction(node_t node) {
             break;
 
         case NODE_DOWHILE:
-            printf_level(1, "Exploring NODE_DOWHILE\n");
             int32_t do_while_loop_label = get_new_label();
 
             label_inst_create(do_while_loop_label);
@@ -179,7 +177,6 @@ void gen_code_instruction(node_t node) {
             break;
 
         case NODE_FOR:
-            printf_level(1, "Exploring NODE_FOR\n");
             int32_t for_loop_label = get_new_label();
             int32_t end_for_loop_label = get_new_label();
 
@@ -198,7 +195,6 @@ void gen_code_instruction(node_t node) {
             break;
 
         case NODE_AFFECT:
-            printf_level(1, "Exploring NODE_AFFECT\n");
             int32_t reg = get_current_reg();
             gen_code_expression(node->opr[1]);
 
@@ -237,10 +233,11 @@ void gen_code_instruction(node_t node) {
 void gen_code_expression(node_t node) {
     if (node == NULL) return;
 
+    printf_level(1, "gen_code_expression \t: Exploring NODE_%s\n", node_nature2string(node->nature));
+
     int32_t reg = get_current_reg(), reg1, reg2;
 
     if (node->nature == NODE_IDENT) {
-        printf_level(1, "gen_code_expression : Exploring NODE_IDENT\n");
 
         if (node->decl_node != NULL) {
             if (node->decl_node->global_decl) {
@@ -257,8 +254,21 @@ void gen_code_expression(node_t node) {
         }
     }
     else if (node->nature == NODE_INTVAL || node->nature == NODE_BOOLVAL) {
-        printf_level(1, "gen_code_expression : Exploring %s\n", node->nature == NODE_INTVAL ? "NODE_INTVAL" : "NODE_BOOLVAL");
-        ori_inst_create(reg, 0, node->value);
+        if (node->value == 0xFFFFFFFF) {
+            addiu_inst_create(reg, 0, 0xFFFFFFFF);
+        }
+        else {
+            int32_t up_value = node->value >> 16;
+            int32_t low_value = node->value & 0xFFFF;
+
+            if (up_value > 0) {
+                lui_inst_create(reg, up_value);
+                ori_inst_create(reg, reg, low_value);
+            }
+            else {
+                ori_inst_create(reg, 0, low_value);
+            }
+        }
     }
     else {
         gen_code_expression(node->opr[0]);
@@ -281,101 +291,83 @@ void gen_code_expression(node_t node) {
 
         switch (node->nature) {
             case NODE_PLUS:
-                printf_level(1, "gen_code_expression : Exploring NODE_PLUS\n");
                 addu_inst_create(reg, reg1, reg2);
                 break;
             case NODE_MINUS:
-                printf_level(1, "gen_code_expression : Exploring NODE_MINUS\n");
                 subu_inst_create(reg, reg1, reg2);
                 break;
             case NODE_MUL:
-                printf_level(1, "gen_code_expression : Exploring NODE_MUL\n");
                 mult_inst_create(reg1, reg2);
-                mflo_inst_create(reg1);
+                mflo_inst_create(reg1); // LO register contains the product
                 break;
             case NODE_DIV:
-                printf_level(1, "gen_code_expression : Exploring NODE_DIV\n");
                 div_inst_create(reg1, reg2);
-                teq_inst_create(reg2, 0);
-                mflo_inst_create(reg1);
+                teq_inst_create(reg2, 0); // Trap the error if division by 0
+                mflo_inst_create(reg1); // LO register contains the quotient
                 break;
             case NODE_MOD:
-                printf_level(1, "gen_code_expression : Exploring NODE_MOD\n");
                 div_inst_create(reg1, reg2);
-                teq_inst_create(reg2, 0);
-                mfhi_inst_create(reg1);
+                teq_inst_create(reg2, 0); // Same as div
+                mfhi_inst_create(reg1); // HI register contains the remainder
                 break;
             case NODE_BAND:
-                printf_level(1, "gen_code_expression : Exploring NODE_BAND\n");
                 and_inst_create(reg, reg1, reg2);
                 break;
             case NODE_BOR:
-                printf_level(1, "gen_code_expression : Exploring NODE_BOR\n");
                 or_inst_create(reg, reg1, reg2);
                 break;
             case NODE_BXOR:
-                printf_level(1, "gen_code_expression : Exploring NODE_BXOR\n");
                 xor_inst_create(reg, reg1, reg2);
                 break;
             case NODE_AND:
-                printf_level(1, "gen_code_expression : Exploring NODE_AND\n");
                 and_inst_create(reg, reg1, reg2);
                 break;
             case NODE_OR:
-                printf_level(1, "gen_code_expression : Exploring NODE_OR\n");
                 or_inst_create(reg, reg1, reg2);
                 break;
             case NODE_EQ:
-                printf_level(1, "gen_code_expression : Exploring NODE_EQ\n");
-                xor_inst_create(reg1, reg1, reg2);
-                sltiu_inst_create(reg1, reg1, 1);
+                xor_inst_create(reg1, reg1, reg2); // Bits difference between the two regs
+                sltiu_inst_create(reg1, reg1, 1); // If the result is 0, the two regs are equals and reg1 is true
                 break;
             case NODE_NE:
-                printf_level(1, "gen_code_expression : Exploring NODE_NE\n");
-                xor_inst_create(reg1, reg1, reg2);
-                sltu_inst_create(reg1, 0, reg1);
+                xor_inst_create(reg1, reg1, reg2); // Same as NODE_EQ
+                sltu_inst_create(reg1, 0, reg1); // If the result is greater than 0, the two regs are different and reg1 is true
                 break;
             case NODE_LT:
-                printf_level(1, "gen_code_expression : Exploring NODE_LT\n");
                 slt_inst_create(reg1, reg1, reg2);
                 break;
             case NODE_GT:
-                printf_level(1, "gen_code_expression : Exploring NODE_GT\n");
                 slt_inst_create(reg1, reg2, reg1);
                 break;
             case NODE_LE:
-                printf_level(1, "gen_code_expression : Exploring NODE_LE\n");
                 slt_inst_create(reg1, reg2, reg1);
                 xori_inst_create(reg1, reg1, 1);
                 break;
             case NODE_GE:
-                printf_level(1, "gen_code_expression : Exploring NODE_GE\n");
                 slt_inst_create(reg1, reg1, reg2);
                 xori_inst_create(reg1, reg1, 1);
                 break;
             case NODE_SLL:
-                printf_level(1, "gen_code_expression : Exploring NODE_SLL\n");
                 sllv_inst_create(reg, reg1, reg2);
                 break;
             case NODE_SRL:
-                printf_level(1, "gen_code_expression : Exploring NODE_SRL\n");
                 srlv_inst_create(reg, reg1, reg2);
                 break;
             case NODE_SRA:
-                printf_level(1, "gen_code_expression : Exploring NODE_SRA\n");
                 srav_inst_create(reg, reg1, reg2);
                 break;
             case NODE_NOT:
-                printf_level(1, "gen_code_expression : Exploring NODE_NOT\n");
                 nor_inst_create(reg, 0, reg1);
                 break;
             case NODE_UMINUS:
-                printf_level(1, "gen_code_expression : Exploring NODE_UMINUS\n");
                 subu_inst_create(reg, 0, reg1);
                 break;
             case NODE_BNOT:
-                printf_level(1, "gen_code_expression : Exploring NODE_BNOT\n");
                 xori_inst_create(reg, reg1, 1);
+                break;
+            default:
+                fprintf(stderr, "Error line %d: Unknown expression type \'%s\' in generation.\n", node->lineno, node_nature2string(node->nature));
+                exit(1);
                 break;
         }
 
@@ -387,20 +379,18 @@ void gen_code_expression(node_t node) {
 void gen_code_declaration(node_t node) {
     if (node == NULL) return;
 
-    printf_level(1, "gen_code_declaration : ");
+    printf_level(1, "gen_code_declaration \t: ");
+    printf_level(1, "Exploring NODE_%s\n", node_nature2string(node->nature));
 
     if (node->nature == NODE_LIST) {
-        printf_level(1, "Exploring NODE_LIST\n");
         gen_code_declaration(node->opr[0]);
         gen_code_declaration(node->opr[1]);
     }
     else if (node->nature == NODE_DECLS) {
-        printf_level(1, "Exploring NODE_DECLS\n");
         gen_code_declaration(node->opr[1]);
     }
     else if (node->nature == NODE_DECL) {
-        printf_level(1, "Exploring NODE_DECL\n");
-        printf_level(2, "In GenCode : Declaring %s %s\n", node->opr[0]->type == TYPE_INT ? "integer" : "boolean", node->opr[0]->ident);
+        printf_level(2, "In GenCode \t\t: Declaring %s \'%s\'\n", node->opr[0]->type == TYPE_INT ? "integer" : "boolean", node->opr[0]->ident);
         if (node->opr[0]->global_decl) {
             word_inst_create(node->opr[0]->ident, node->opr[1]->value);
         }
@@ -408,5 +398,9 @@ void gen_code_declaration(node_t node) {
             gen_code_expression(node->opr[1]);
             sw_inst_create(get_current_reg(), node->opr[0]->offset, 29);
         }
+    }
+    else {
+        fprintf(stderr, "Error line %d: Unknown declaration type \'%s\' in generation.\n", node->lineno, node_nature2string(node->nature));
+        exit(1);
     }
 }

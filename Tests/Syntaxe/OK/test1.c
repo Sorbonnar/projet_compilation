@@ -1,47 +1,12 @@
-// Test programme MiniC
-int a = 0, b;
-bool c = false;
+// Un exemple de programme MiniC
+int start = 0;
+int end = 100;
 
 void main() {
-    int i, a = b, e = 2;
-    bool d = true;
-
-    if (c) {
-        b;
+    int i, s = start, e = end;
+    int sum = 0;
+    for (i = s; i < e; i = i + 1) {
+        sum = sum + i;
     }
-    for (i = 0; i < 10; i = i + 1) {
-        a;
-    }
-    while (true) {
-        a;
-    }
-
-    do {
-        a;
-    }
-    while(d);
-
-    a = b * e;
-    a = b / e;
-    a = b % e;
-    a = b + e;
-    a = b - e;
-    c = b < a;
-    c = b > a;
-    c = b == a;
-    c = b <= a;
-    c = b >= a;
-    c = b != a;
-    c = d && c;
-    c = b & a;
-    c = d || c;
-    c = b | a;
-    c = b ^ a;
-    c = b << a;
-    c = b >> a;
-    c = b >>> a;
-    c = !a;
-    c = ~d;
-
-    print("a: ", a, "\n");
+    print("sum: ", sum, "\n");
 }

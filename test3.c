@@ -1,8 +1,5 @@
-void main() {
-    int a, b;
-    
-    a = 1 + 2 + 3 + 4 + 5 + 6 + 7;
-    b = 1 + (2 + (3 + (4 + (5 + (6 + a)))));
-
-    print("a: ", a, "\nb: ", b);
+void main(){
+    bool a = true;
+    int e = 8;
+    bool r = a / e;
 }

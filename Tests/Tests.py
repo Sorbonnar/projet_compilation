@@ -1,3 +1,5 @@
+# Inspired by https://docs.python.org/3/library/os.html and https://docs.python.org/3/library/subprocess.html
+
 import os
 import subprocess
 

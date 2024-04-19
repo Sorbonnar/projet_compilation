@@ -1,0 +1,164 @@
+<?xml version="1.0"?>
+
+<valgrindoutput>
+
+<protocolversion>4</protocolversion>
+<protocoltool>memcheck</protocoltool>
+
+<preamble>
+  <line>Memcheck, a memory error detector</line>
+  <line>Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.</line>
+  <line>Using Valgrind-3.18.1 and LibVEX; rerun with -h for copyright info</line>
+  <line>Command: ./minicc -r 4 ./test4.c</line>
+</preamble>
+
+<pid>214449</pid>
+<ppid>214416</ppid>
+<tool>memcheck</tool>
+
+<args>
+  <vargv>
+    <exe>/usr/bin/valgrind.bin</exe>
+    <arg>--leak-check=full</arg>
+    <arg>--xml=yes</arg>
+    <arg>--xml-file=valgrind_output.xml</arg>
+    <arg>--quiet</arg>
+  </vargv>
+  <argv>
+    <exe>./minicc</exe>
+    <arg>-r</arg>
+    <arg>4</arg>
+    <arg>./test4.c</arg>
+  </argv>
+</args>
+
+<status>
+  <state>RUNNING</state>
+  <time>00:00:00:00.182 </time>
+</status>
+
+<fatal_signal>
+  <tid>1</tid>
+  <signo>2</signo>
+  <signame>SIGINT</signame>
+  <sicode>128</sicode>
+  <siaddr>0x0</siaddr>
+  <stack>
+    <frame>
+      <ip>0x4026B16</ip>
+      <obj>/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2</obj>
+      <fn>__open_nocancel</fn>
+      <dir>./io/../sysdeps/unix/sysv/linux</dir>
+      <file>open64_nocancel.c</file>
+      <line>39</line>
+    </frame>
+    <frame>
+      <ip>0x4007658</ip>
+      <obj>/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2</obj>
+      <fn>open_verify.constprop.1</fn>
+      <dir>./elf/./elf</dir>
+      <file>dl-load.c</file>
+      <line>1626</line>
+    </frame>
+    <frame>
+      <ip>0x400A5B3</ip>
+      <obj>/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2</obj>
+      <fn>_dl_map_object</fn>
+      <dir>./elf/./elf</dir>
+      <file>dl-load.c</file>
+      <line>2265</line>
+    </frame>
+    <frame>
+      <ip>0x40203D8</ip>
+      <obj>/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2</obj>
+      <fn>map_doit</fn>
+      <dir>./elf/./elf</dir>
+      <file>rtld.c</file>
+      <line>666</line>
+    </frame>
+    <frame>
+      <ip>0x401D349</ip>
+      <obj>/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2</obj>
+      <fn>_dl_catch_exception</fn>
+      <dir>./elf/./elf</dir>
+      <file>dl-error-skeleton.c</file>
+      <line>208</line>
+    </frame>
+    <frame>
+      <ip>0x401D3F2</ip>
+      <obj>/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2</obj>
+      <fn>_dl_catch_error</fn>
+      <dir>./elf/./elf</dir>
+      <file>dl-error-skeleton.c</file>
+      <line>227</line>
+    </frame>
+    <frame>
+      <ip>0x4021820</ip>
+      <obj>/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2</obj>
+      <fn>do_preload</fn>
+      <dir>./elf/./elf</dir>
+      <file>rtld.c</file>
+      <line>841</line>
+    </frame>
+    <frame>
+      <ip>0x4021820</ip>
+      <obj>/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2</obj>
+      <fn>handle_preload_list</fn>
+      <dir>./elf/./elf</dir>
+      <file>rtld.c</file>
+      <line>917</line>
+    </frame>
+    <frame>
+      <ip>0x4024AB8</ip>
+      <obj>/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2</obj>
+      <fn>dl_main</fn>
+      <dir>./elf/./elf</dir>
+      <file>rtld.c</file>
+      <line>1847</line>
+    </frame>
+    <frame>
+      <ip>0x401F83B</ip>
+      <obj>/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2</obj>
+      <fn>_dl_sysdep_start</fn>
+      <dir>./elf/../elf</dir>
+      <file>dl-sysdep.c</file>
+      <line>256</line>
+    </frame>
+    <frame>
+      <ip>0x4021597</ip>
+      <obj>/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2</obj>
+      <fn>_dl_start_final</fn>
+      <dir>./elf/./elf</dir>
+      <file>rtld.c</file>
+      <line>507</line>
+    </frame>
+    <frame>
+      <ip>0x4021597</ip>
+      <obj>/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2</obj>
+      <fn>_dl_start</fn>
+      <dir>./elf/./elf</dir>
+      <file>rtld.c</file>
+      <line>596</line>
+    </frame>
+    <frame>
+      <ip>0x4020297</ip>
+      <obj>/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2</obj>
+    </frame>
+    <frame>
+      <ip>0x3</ip>
+    </frame>
+  </stack>
+</fatal_signal>
+
+
+<status>
+  <state>FINISHED</state>
+  <time>00:00:00:00.366 </time>
+</status>
+
+<errorcounts>
+</errorcounts>
+
+
+</valgrindoutput>
+

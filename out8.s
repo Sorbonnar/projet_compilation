@@ -1,46 +1,80 @@
 
 .data
 
-.asciiz "Even\n"
-.asciiz "Odd\n"
+.asciiz "Addition: "
+.asciiz "Subtraction: "
+.asciiz "Multiplication: "
+.asciiz "Division: "
+.asciiz "Modulo: "
 
 .text
 
 main:
-    addiu $29, $29, -4
-    ori   $8, $0, 0x0
+    addiu $29, $29, -28
+    ori   $8, $0, 0x6
     sw    $8, 0($29)
-_L1:
+    ori   $8, $0, 0x2
+    sw    $8, 4($29)
     lw    $8, 0($29)
-    ori   $9, $0, 0x3
-    slt   $8, $8, $9
-    beq   $8, $0, _L2
+    lw    $9, 4($29)
+    addu  $8, $8, $9
+    sw    $8, 8($29)
     lw    $8, 0($29)
-    ori   $9, $0, 0x2
+    lw    $9, 4($29)
+    subu  $8, $8, $9
+    sw    $8, 12($29)
+    lw    $8, 0($29)
+    lw    $9, 4($29)
+    mult  $8, $9
+    mflo  $8
+    sw    $8, 16($29)
+    lw    $8, 4($29)
+    lw    $9, 0($29)
+    div   $8, $9
+    teq $9, $0
+    mflo  $8
+    sw    $8, 20($29)
+    lw    $8, 4($29)
+    lw    $9, 0($29)
     div   $8, $9
     teq $9, $0
     mfhi  $8
-    ori   $9, $0, 0x0
-    xor   $8, $8, $9
-    sltiu $8, $8, 1
-    beq   $8, $0, _L3
+    sw    $8, 24($29)
     lui   $4, 0x1001
     ori   $4, $4, 0x0
     ori   $2, $0, 0x4
     syscall
-    j     _L4
-_L3:
+    lw    $4, 8($29)
+    ori   $2, $0, 0x1
+    syscall
     lui   $4, 0x1001
-    ori   $4, $4, 0x6
+    ori   $4, $4, 0xb
     ori   $2, $0, 0x4
     syscall
-_L4:
-    lw    $8, 0($29)
-    ori   $9, $0, 0x1
-    addu  $8, $8, $9
-    sw    $8, 0($29)
-    j     _L1
-_L2:
-    addiu $29, $29, 4
+    lw    $4, 12($29)
+    ori   $2, $0, 0x1
+    syscall
+    lui   $4, 0x1001
+    ori   $4, $4, 0x19
+    ori   $2, $0, 0x4
+    syscall
+    lw    $4, 16($29)
+    ori   $2, $0, 0x1
+    syscall
+    lui   $4, 0x1001
+    ori   $4, $4, 0x2a
+    ori   $2, $0, 0x4
+    syscall
+    lw    $4, 20($29)
+    ori   $2, $0, 0x1
+    syscall
+    lui   $4, 0x1001
+    ori   $4, $4, 0x35
+    ori   $2, $0, 0x4
+    syscall
+    lw    $4, 24($29)
+    ori   $2, $0, 0x1
+    syscall
+    addiu $29, $29, 28
     ori   $2, $0, 0xa
     syscall

@@ -18,6 +18,8 @@ char * outfile = DEFAULT_OUTFILE;
 bool stop_after_syntax = false;
 bool stop_after_verif = false;
 
+extern int trace_level;
+
 #if YYDEBUG
 extern int yydebug;
 #endif
@@ -106,14 +108,17 @@ IDF             {LETTRE}({LETTRE}|{CHIFFRE}|_)*
                 RETURN(TOK_IDENT);
 }
 
-{ENTIER} {
-                #if !LEX_DEBUG
-                yylval.intval = atoi(yytext);
-                if ((yylval.intval - floor(yylval.intval) > 0) || (yylval.intval < 0) || (yylval.intval > INT32_MAX)) { // INT32_MAX dans stdint.h
-                    fprintf(stderr, "Error line %d: Out of bounds error\n", yylineno);
+{ENTIER} { // Inspired by https://koor.fr/C/cstdlib/strtol.wp
+                char *endptr;
+                errno = 0;
+                long int value = strtol(yytext, &endptr, 0);
+
+                if (errno == ERANGE || *endptr != '\0' || value > 0xFFFFFFFF) {
+                    fprintf(stderr, "Error line %d: Out of bounds error or invalid number\n", yylineno);
                     exit(1);
                 }
-                #endif
+
+                yylval.intval = (int32_t) value;
                 RETURN(TOK_INTVAL);
 }
 
@@ -156,6 +161,7 @@ int main(int argc, char ** argv) {
         #if YYDEBUG
         yydebug = 1;
         #endif
+        printf_level(5, "\n################ Grammar Passe 0 ################\n");
         yyparse(&program_root);
         fclose(yyin);
         analyse_tree(program_root);
