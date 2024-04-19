@@ -2,12 +2,12 @@
 .data
 
 int1: .word 10
-.asciiz "Sum:"
-.asciiz "true"
-.asciiz "false"
-.asciiz "a:"
-.asciiz "i:"
-.asciiz "b:"
+.asciiz "Sum: "
+.asciiz "\nTrue"
+.asciiz "\nFalse"
+.asciiz "\na in while: "
+.asciiz "\ni in for: "
+.asciiz "\nb in do-while: "
 
 .text
 
@@ -34,13 +34,13 @@ main:
     lw    $8, 12($29)
     beq   $8, $0, _L1
     lui   $4, 0x1001
-    ori   $4, $4, 0x9
+    ori   $4, $4, 0xa
     ori   $2, $0, 0x4
     syscall
     j     _L2
 _L1:
     lui   $4, 0x1001
-    ori   $4, $4, 0xe
+    ori   $4, $4, 0x10
     ori   $2, $0, 0x4
     syscall
 _L2:
@@ -50,7 +50,7 @@ _L3:
     slt   $8, $8, $9
     beq   $8, $0, _L4
     lui   $4, 0x1001
-    ori   $4, $4, 0x14
+    ori   $4, $4, 0x17
     ori   $2, $0, 0x4
     syscall
     lw    $4, 0($29)
@@ -70,7 +70,7 @@ _L5:
     slt   $8, $8, $9
     beq   $8, $0, _L6
     lui   $4, 0x1001
-    ori   $4, $4, 0x17
+    ori   $4, $4, 0x25
     ori   $2, $0, 0x4
     syscall
     lw    $4, 8($29)
@@ -88,7 +88,7 @@ _L7:
     subu  $8, $8, $9
     sw    $8, 4($29)
     lui   $4, 0x1001
-    ori   $4, $4, 0x1a
+    ori   $4, $4, 0x31
     ori   $2, $0, 0x4
     syscall
     lw    $4, 4($29)

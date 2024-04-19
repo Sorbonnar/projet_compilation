@@ -1,14 +1,14 @@
 
 .data
 
-.asciiz "BAND: "
-.asciiz "BOR: "
-.asciiz "BXOR: "
-.asciiz "!C: "
-.asciiz "-A: "
-.asciiz "~A: "
-.asciiz "Shift Left: "
-.asciiz "Shift Right: "
+.asciiz "\nBAND: "
+.asciiz "\nBOR: "
+.asciiz "\nBXOR: "
+.asciiz "\n!C: "
+.asciiz "\n-A: "
+.asciiz "\n~A: "
+.asciiz "\nShift Left: "
+.asciiz "\nShift Right: "
 
 .text
 
@@ -57,49 +57,49 @@ main:
     ori   $2, $0, 0x1
     syscall
     lui   $4, 0x1001
-    ori   $4, $4, 0x7
+    ori   $4, $4, 0x8
     ori   $2, $0, 0x4
     syscall
     lw    $4, 16($29)
     ori   $2, $0, 0x1
     syscall
     lui   $4, 0x1001
-    ori   $4, $4, 0xd
+    ori   $4, $4, 0xf
     ori   $2, $0, 0x4
     syscall
     lw    $4, 20($29)
     ori   $2, $0, 0x1
     syscall
     lui   $4, 0x1001
-    ori   $4, $4, 0x14
+    ori   $4, $4, 0x17
     ori   $2, $0, 0x4
     syscall
     lw    $4, 24($29)
     ori   $2, $0, 0x1
     syscall
     lui   $4, 0x1001
-    ori   $4, $4, 0x19
+    ori   $4, $4, 0x1d
     ori   $2, $0, 0x4
     syscall
     lw    $4, 28($29)
     ori   $2, $0, 0x1
     syscall
     lui   $4, 0x1001
-    ori   $4, $4, 0x1e
+    ori   $4, $4, 0x23
     ori   $2, $0, 0x4
     syscall
     lw    $4, 32($29)
     ori   $2, $0, 0x1
     syscall
     lui   $4, 0x1001
-    ori   $4, $4, 0x23
+    ori   $4, $4, 0x29
     ori   $2, $0, 0x4
     syscall
     lw    $4, 36($29)
     ori   $2, $0, 0x1
     syscall
     lui   $4, 0x1001
-    ori   $4, $4, 0x30
+    ori   $4, $4, 0x37
     ori   $2, $0, 0x4
     syscall
     lw    $4, 40($29)

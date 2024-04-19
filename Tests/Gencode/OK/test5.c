@@ -1,3 +1,9 @@
+// Expected output:
+// Even
+// Odd
+// Even
+//
+
 void main() {
     int i = 0;
     while (i < 3) {

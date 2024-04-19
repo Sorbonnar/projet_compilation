@@ -1,4 +1,4 @@
-// Variable not initialized
+// No expected output
 void main() {
     int a;
     int b = a + 10;

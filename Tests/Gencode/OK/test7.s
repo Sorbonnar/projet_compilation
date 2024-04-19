@@ -7,7 +7,6 @@ limit: .word 3
 .asciiz ")\n"
 .asciiz "a: "
 .asciiz "\n"
-.asciiz "a: "
 
 .text
 
@@ -63,17 +62,6 @@ _L3:
     subu  $9, $9, $10
     addu  $8, $8, $9
     sw    $8, 8($29)
-    lui   $4, 0x1001
-    ori   $4, $4, 0xc
-    ori   $2, $0, 0x4
-    syscall
-    lw    $4, 8($29)
-    ori   $2, $0, 0x1
-    syscall
-    lui   $4, 0x1001
-    ori   $4, $4, 0x10
-    ori   $2, $0, 0x4
-    syscall
     lw    $8, 4($29)
     ori   $9, $0, 0x1
     addu  $8, $8, $9
@@ -87,11 +75,15 @@ _L4:
     j     _L1
 _L2:
     lui   $4, 0x1001
-    ori   $4, $4, 0x12
+    ori   $4, $4, 0xc
     ori   $2, $0, 0x4
     syscall
     lw    $4, 8($29)
     ori   $2, $0, 0x1
+    syscall
+    lui   $4, 0x1001
+    ori   $4, $4, 0x10
+    ori   $2, $0, 0x4
     syscall
     addiu $29, $29, 16
     ori   $2, $0, 0xa

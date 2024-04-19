@@ -52,7 +52,7 @@ void parse_args(int argc, char **argv) {
 
         if (strcmp(arg, "-b") == 0) {
             if (argc > 2) {
-                fprintf(stderr, "\nError: -b cannot be used with any other options.\n");
+                fprintf(stderr, "Error: -b cannot be used with any other options\n");
                 exit(1);
             }
             printf("\n      ___           ___           ___           ___                       ___       ___           ___     \n");
@@ -80,7 +80,7 @@ void parse_args(int argc, char **argv) {
                 arg_index++;
             }
             else {
-                fprintf(stderr, "\nError: Missing argument for -o.\n\n");
+                fprintf(stderr, "Error: Missing argument for -o\n");
                 affiche_utilisation();
                 exit(1);
             }
@@ -91,13 +91,13 @@ void parse_args(int argc, char **argv) {
                 arg_index++;
                 trace_level = atoi(argos);
                 if (trace_level < 0 || trace_level > 5) {
-                    fprintf(stderr, "\nError: Trace level must be between 0 and 5.\n\n");
+                    fprintf(stderr, "Error: Trace level must be between 0 and 5\n");
                     affiche_utilisation();
                     exit(1);
                 }
             }
             else {
-                fprintf(stderr, "\nError: Missing argument for -t.\n\n");
+                fprintf(stderr, "Error: Missing argument for -t\n");
                 affiche_utilisation();
                 exit(1);
             }
@@ -108,21 +108,21 @@ void parse_args(int argc, char **argv) {
                 arg_index++;
                 int max_regs = atoi(argos);
                 if (max_regs < 4 || max_regs > 8) {
-                    fprintf(stderr, "\nError: Number of registers must be between 4 and 8.\n\n");
+                    fprintf(stderr, "Error: Number of registers must be between 4 and 8\n");
                     affiche_utilisation();
                     exit(1);
                 }
                 set_max_registers(max_regs);
             }
             else {
-                fprintf(stderr, "\nError: Missing argument for -r option.\n\n");
+                fprintf(stderr, "Error: Missing argument for -r option\n");
                 affiche_utilisation();
                 exit(1);
             }
         }
         else if (strcmp(arg, "-s") == 0) {
             if (stop_after_verif) {
-                fprintf(stderr, "\nError: -s and -v options are incompatible.\n\n");
+                fprintf(stderr, "Error: -s and -v options are incompatible\n");
                 affiche_utilisation();
                 exit(1);
             }
@@ -130,7 +130,7 @@ void parse_args(int argc, char **argv) {
         }
         else if (strcmp(arg, "-v") == 0) {
             if (stop_after_syntax) {
-                fprintf(stderr, "\nError: -s and -v options are incompatible.\n\n");
+                fprintf(stderr, "Error: -s and -v options are incompatible\n");
                 affiche_utilisation();
                 exit(1);
             }
@@ -142,7 +142,7 @@ void parse_args(int argc, char **argv) {
         }
         else if (strcmp(arg + strlen(arg) - 2, ".c") == 0 || strcmp(arg + strlen(arg) - 2, ".C") == 0) {
             if (fichier_sortie > 0) {
-                fprintf(stderr, "\nError: Multiple outfiles specified.\n\n");
+                fprintf(stderr, "Error: Multiple outfiles specified\n");
                 affiche_utilisation();
                 exit(1);
             }
@@ -150,7 +150,7 @@ void parse_args(int argc, char **argv) {
             fichier_sortie++;
         }
         else {
-            fprintf(stderr, "\nError: Unknown option \'%s\'.\n\n", arg);
+            fprintf(stderr, "Error: Unknown option \'%s\'\n", arg);
             affiche_utilisation();
             exit(1);
         }
@@ -159,13 +159,13 @@ void parse_args(int argc, char **argv) {
     if (infile != NULL) {
         FILE * f = fopen(infile, "r");
         if (f == NULL) {
-            fprintf(stderr, "\nError: Cannot open file \'%s\'.\n\n", infile);
+            fprintf(stderr, "Error: Cannot open file \'%s\'\n", infile);
             exit(1);
         }
         fclose(f);
     }
     else {
-        fprintf(stderr, "\nError: Missing source file.\n\n");
+        fprintf(stderr, "Error: Missing source file\n");
         affiche_utilisation();
         exit(1);
     }
@@ -185,14 +185,17 @@ void free_nodes(node_t n) {
         n->opr = NULL;
     }
 
-    if (n->nature == NODE_IDENT && n->ident != NULL) {
+    if (n->ident != NULL) {
         free(n->ident);
         n->ident = NULL;
     }
-    else if (n->nature == NODE_STRINGVAL && n->str != NULL) {
+    
+    if (n->str != NULL) {
         free(n->str);
         n->str = NULL;
     }
+
+    n->decl_node = NULL;
 
     free(n);
 }

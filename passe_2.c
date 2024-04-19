@@ -77,7 +77,7 @@ void gen_code_base(node_t node) {
             break;
 
         default:
-            fprintf(stderr, "Error line %d: Unknown node type \'%s\' in generation.\n", node->lineno, node_nature2string(node->nature));
+            fprintf(stderr, "Error line %d: Unknown node type \'%s\' in generation\n", node->lineno, node_nature2string(node->nature));
             exit(1);
             break;
     }
@@ -107,7 +107,7 @@ void gen_code_print(node_t node) {
                     }
                 }
                 else {
-                    fprintf(stderr, "Error line %d: Undeclared variable \'%s\'.\n", node->lineno, node->ident);
+                    fprintf(stderr, "Error line %d: Undeclared variable \'%s\'\n", node->lineno, node->ident);
                     exit(1);
                 }
                 ori_inst_create(2, 0, 1);
@@ -218,13 +218,13 @@ void gen_code_instruction(node_t node) {
                 }
             }
             else {
-                fprintf(stderr, "Error line %d: Undeclared variable \'%s\'.\n", node->lineno, node->opr[0]->ident);
+                fprintf(stderr, "Error line %d: Undeclared variable \'%s\'\n", node->lineno, node->opr[0]->ident);
                 exit(1);
             }
             break;
 
         default:
-            fprintf(stderr, "Error line %d: Unknown instruction type in generation.\n", node->lineno);
+            fprintf(stderr, "Error line %d: Unknown instruction type in generation\n", node->lineno);
             exit(1);
             break;
     }
@@ -249,7 +249,7 @@ void gen_code_expression(node_t node) {
             }
         }
         else {
-            fprintf(stderr, "Error line %d: Undeclared variable \'%s\'.\n", node->lineno, node->ident);
+            fprintf(stderr, "Error line %d: Undeclared variable \'%s\'\n", node->lineno, node->ident);
             exit(1);
         }
     }
@@ -366,7 +366,7 @@ void gen_code_expression(node_t node) {
                 xori_inst_create(reg, reg1, 1);
                 break;
             default:
-                fprintf(stderr, "Error line %d: Unknown expression type \'%s\' in generation.\n", node->lineno, node_nature2string(node->nature));
+                fprintf(stderr, "Error line %d: Unknown expression type \'%s\' in generation\n", node->lineno, node_nature2string(node->nature));
                 exit(1);
                 break;
         }
@@ -400,7 +400,7 @@ void gen_code_declaration(node_t node) {
         }
     }
     else {
-        fprintf(stderr, "Error line %d: Unknown declaration type \'%s\' in generation.\n", node->lineno, node_nature2string(node->nature));
+        fprintf(stderr, "Error line %d: Unknown declaration type \'%s\' in generation\n", node->lineno, node_nature2string(node->nature));
         exit(1);
     }
 }

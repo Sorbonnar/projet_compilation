@@ -4,6 +4,8 @@
 count: .word 5
 .asciiz "Count: "
 .asciiz "\n"
+.asciiz "Count: "
+.asciiz "\n"
 
 .text
 
@@ -41,6 +43,18 @@ _L2:
     addu  $8, $8, $9
     lui   $9, 0x1001
     sw    $8, 0($9)
+    lui   $4, 0x1001
+    ori   $4, $4, 0xe
+    ori   $2, $0, 0x4
+    syscall
+    lui   $4, 0x1001
+    lw    $4, 0($4)
+    ori   $2, $0, 0x1
+    syscall
+    lui   $4, 0x1001
+    ori   $4, $4, 0x16
+    ori   $2, $0, 0x4
+    syscall
     addiu $29, $29, 0
     ori   $2, $0, 0xa
     syscall

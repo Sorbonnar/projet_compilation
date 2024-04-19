@@ -1068,7 +1068,7 @@ YY_RULE_SETUP
                 long int value = strtol(yytext, &endptr, 0);
 
                 if (errno == ERANGE || *endptr != '\0' || value > 0xFFFFFFFF) {
-                    fprintf(stderr, "Error line %d: Out of bounds error or invalid number\n", yylineno);
+                    fprintf(stderr, "Error line %d: Out of bounds error\n", yylineno);
                     exit(1);
                 }
 

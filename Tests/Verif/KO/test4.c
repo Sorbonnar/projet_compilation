@@ -1,5 +1,8 @@
-void main(){
-    bool a =true;
-    int e=8;
-    bool r =a/e;
+void main() {
+   int a = 1;
+
+   if(a){
+       print("HelloWord");
+   }
+   
 }

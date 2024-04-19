@@ -516,7 +516,7 @@ node_t make_terminal_node(node_nature nature, ...) {
         default:
             va_end(args);
             free(node);
-            fprintf(stderr, "Error line %d: Unknown node nature error\n", yylineno);
+            fprintf(stderr, "Error line %d: Unknown node nature \'%s\' error\n", yylineno, node_nature2string(nature));
             exit(1);
             break;
     }
@@ -527,10 +527,10 @@ node_t make_terminal_node(node_nature nature, ...) {
 
 
 void analyse_tree(node_t root) {
-    dump_tree(root, "apres_syntaxe.dot");
+    // dump_tree(root, "apres_syntaxe.dot");
     if (!stop_after_syntax) {
         analyse_passe_1(root);
-        dump_tree(root, "apres_passe_1.dot");
+        // dump_tree(root, "apres_passe_1.dot");
         if (!stop_after_verif) {
             create_program(); 
             gen_code_passe_2(root);

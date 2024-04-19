@@ -4,30 +4,31 @@
 int1: .word 20
 bool1: .word 0
 .asciiz "Addition: "
-.asciiz "Subtraction: "
-.asciiz "Multiplication: "
-.asciiz "Division: "
-.asciiz "Modulo: "
-.asciiz "True"
-.asciiz "False"
-.asciiz "a == b"
-.asciiz "a != b"
-.asciiz "a < b"
-.asciiz "a > b"
-.asciiz "a <= b"
-.asciiz "a >= b"
-.asciiz "BAND: "
-.asciiz "BOR: "
-.asciiz "BXOR: "
-.asciiz "!C: "
-.asciiz "-A: "
-.asciiz "~A: "
-.asciiz "Shift Left: "
-.asciiz "Shift Right: "
-.asciiz "a in while: "
-.asciiz "i in for: "
-.asciiz "b in do-while: "
-.asciiz "End of main"
+.asciiz "\nSubtraction: "
+.asciiz "\nMultiplication: "
+.asciiz "\nDivision: "
+.asciiz "\nModulo: "
+.asciiz "\nTrue"
+.asciiz "\nFalse"
+.asciiz "\na == b"
+.asciiz "\na != b"
+.asciiz "\na < b"
+.asciiz "\na > b"
+.asciiz "\na <= b"
+.asciiz "\na >= b"
+.asciiz "\nBAND: "
+.asciiz "\nBOR: "
+.asciiz "\nBXOR: "
+.asciiz "\n!C: "
+.asciiz "\n-A: "
+.asciiz "\n~A: "
+.asciiz "\nShift Left: "
+.asciiz "\nShift Right: "
+.asciiz "\na in while: "
+.asciiz "\ni in for: "
+.asciiz "\nb in do-while: "
+.asciiz "\nEnd of main"
+.asciiz "\n"
 
 .text
 
@@ -109,21 +110,21 @@ main:
     ori   $2, $0, 0x1
     syscall
     lui   $4, 0x1001
-    ori   $4, $4, 0x21
+    ori   $4, $4, 0x22
     ori   $2, $0, 0x4
     syscall
     lw    $4, 24($29)
     ori   $2, $0, 0x1
     syscall
     lui   $4, 0x1001
-    ori   $4, $4, 0x32
+    ori   $4, $4, 0x34
     ori   $2, $0, 0x4
     syscall
     lw    $4, 28($29)
     ori   $2, $0, 0x1
     syscall
     lui   $4, 0x1001
-    ori   $4, $4, 0x3d
+    ori   $4, $4, 0x40
     ori   $2, $0, 0x4
     syscall
     lw    $4, 32($29)
@@ -132,13 +133,13 @@ main:
     lw    $8, 8($29)
     beq   $8, $0, _L1
     lui   $4, 0x1001
-    ori   $4, $4, 0x46
+    ori   $4, $4, 0x4a
     ori   $2, $0, 0x4
     syscall
     j     _L2
 _L1:
     lui   $4, 0x1001
-    ori   $4, $4, 0x4b
+    ori   $4, $4, 0x50
     ori   $2, $0, 0x4
     syscall
 _L2:
@@ -148,7 +149,7 @@ _L2:
     sltiu $8, $8, 1
     beq   $8, $0, _L3
     lui   $4, 0x1001
-    ori   $4, $4, 0x51
+    ori   $4, $4, 0x57
     ori   $2, $0, 0x4
     syscall
     j     _L4
@@ -159,7 +160,7 @@ _L3:
     sltu  $8, $0, $8
     beq   $8, $0, _L5
     lui   $4, 0x1001
-    ori   $4, $4, 0x58
+    ori   $4, $4, 0x5f
     ori   $2, $0, 0x4
     syscall
 _L5:
@@ -169,7 +170,7 @@ _L4:
     slt   $8, $8, $9
     beq   $8, $0, _L6
     lui   $4, 0x1001
-    ori   $4, $4, 0x5f
+    ori   $4, $4, 0x67
     ori   $2, $0, 0x4
     syscall
     j     _L7
@@ -179,7 +180,7 @@ _L6:
     slt   $8, $9, $8
     beq   $8, $0, _L8
     lui   $4, 0x1001
-    ori   $4, $4, 0x65
+    ori   $4, $4, 0x6e
     ori   $2, $0, 0x4
     syscall
 _L8:
@@ -190,7 +191,7 @@ _L7:
     xori  $8, $8, 0x1
     beq   $8, $0, _L9
     lui   $4, 0x1001
-    ori   $4, $4, 0x6b
+    ori   $4, $4, 0x75
     ori   $2, $0, 0x4
     syscall
     j     _L10
@@ -201,62 +202,62 @@ _L9:
     xori  $8, $8, 0x1
     beq   $8, $0, _L11
     lui   $4, 0x1001
-    ori   $4, $4, 0x72
+    ori   $4, $4, 0x7d
     ori   $2, $0, 0x4
     syscall
 _L11:
 _L10:
     lui   $4, 0x1001
-    ori   $4, $4, 0x79
+    ori   $4, $4, 0x85
     ori   $2, $0, 0x4
     syscall
     lw    $4, 36($29)
     ori   $2, $0, 0x1
     syscall
     lui   $4, 0x1001
-    ori   $4, $4, 0x80
+    ori   $4, $4, 0x8d
     ori   $2, $0, 0x4
     syscall
     lw    $4, 40($29)
     ori   $2, $0, 0x1
     syscall
     lui   $4, 0x1001
-    ori   $4, $4, 0x86
+    ori   $4, $4, 0x94
     ori   $2, $0, 0x4
     syscall
     lw    $4, 44($29)
     ori   $2, $0, 0x1
     syscall
     lui   $4, 0x1001
-    ori   $4, $4, 0x8d
+    ori   $4, $4, 0x9c
     ori   $2, $0, 0x4
     syscall
     lw    $4, 48($29)
     ori   $2, $0, 0x1
     syscall
     lui   $4, 0x1001
-    ori   $4, $4, 0x92
+    ori   $4, $4, 0xa2
     ori   $2, $0, 0x4
     syscall
     lw    $4, 52($29)
     ori   $2, $0, 0x1
     syscall
     lui   $4, 0x1001
-    ori   $4, $4, 0x97
+    ori   $4, $4, 0xa8
     ori   $2, $0, 0x4
     syscall
     lw    $4, 56($29)
     ori   $2, $0, 0x1
     syscall
     lui   $4, 0x1001
-    ori   $4, $4, 0x9c
+    ori   $4, $4, 0xae
     ori   $2, $0, 0x4
     syscall
     lw    $4, 60($29)
     ori   $2, $0, 0x1
     syscall
     lui   $4, 0x1001
-    ori   $4, $4, 0xa9
+    ori   $4, $4, 0xbc
     ori   $2, $0, 0x4
     syscall
     lw    $4, 64($29)
@@ -268,7 +269,7 @@ _L12:
     slt   $8, $8, $9
     beq   $8, $0, _L13
     lui   $4, 0x1001
-    ori   $4, $4, 0xb7
+    ori   $4, $4, 0xcb
     ori   $2, $0, 0x4
     syscall
     lw    $4, 0($29)
@@ -288,7 +289,7 @@ _L14:
     slt   $8, $8, $9
     beq   $8, $0, _L15
     lui   $4, 0x1001
-    ori   $4, $4, 0xc4
+    ori   $4, $4, 0xd9
     ori   $2, $0, 0x4
     syscall
     lw    $4, 12($29)
@@ -306,7 +307,7 @@ _L16:
     subu  $8, $8, $9
     sw    $8, 4($29)
     lui   $4, 0x1001
-    ori   $4, $4, 0xcf
+    ori   $4, $4, 0xe5
     ori   $2, $0, 0x4
     syscall
     lw    $4, 4($29)
@@ -317,7 +318,11 @@ _L16:
     slt   $8, $9, $8
     bne   $8, $0, _L16
     lui   $4, 0x1001
-    ori   $4, $4, 0xdf
+    ori   $4, $4, 0xf6
+    ori   $2, $0, 0x4
+    syscall
+    lui   $4, 0x1001
+    ori   $4, $4, 0x103
     ori   $2, $0, 0x4
     syscall
     addiu $29, $29, 68

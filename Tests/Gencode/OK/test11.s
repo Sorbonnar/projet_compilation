@@ -1,9 +1,10 @@
 
 .data
 
-.asciiz "a in while: "
-.asciiz "i in for: "
-.asciiz "b in do-while: "
+.asciiz "\na in while: "
+.asciiz "\ni in for: "
+.asciiz "\nb in do-while: "
+.asciiz "\n"
 
 .text
 
@@ -39,7 +40,7 @@ _L3:
     slt   $8, $8, $9
     beq   $8, $0, _L4
     lui   $4, 0x1001
-    ori   $4, $4, 0xd
+    ori   $4, $4, 0xe
     ori   $2, $0, 0x4
     syscall
     lw    $4, 8($29)
@@ -57,7 +58,7 @@ _L5:
     subu  $8, $8, $9
     sw    $8, 4($29)
     lui   $4, 0x1001
-    ori   $4, $4, 0x18
+    ori   $4, $4, 0x1a
     ori   $2, $0, 0x4
     syscall
     lw    $4, 4($29)
@@ -67,6 +68,10 @@ _L5:
     ori   $9, $0, 0x5
     slt   $8, $9, $8
     bne   $8, $0, _L5
+    lui   $4, 0x1001
+    ori   $4, $4, 0x2b
+    ori   $2, $0, 0x4
+    syscall
     addiu $29, $29, 12
     ori   $2, $0, 0xa
     syscall

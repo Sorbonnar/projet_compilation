@@ -1,4 +1,6 @@
 void main() {
-   int a=b+1;
-   int b=2;
+    bool a = true;
+    while(a){
+        print("HelloWord",b);
+    }
 }

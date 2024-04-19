@@ -1,14 +1,15 @@
 
 .data
 
-.asciiz "True"
-.asciiz "False"
-.asciiz "a == b"
-.asciiz "a != b"
-.asciiz "a < b"
-.asciiz "a > b"
-.asciiz "a <= b"
-.asciiz "a >= b"
+.asciiz "\nTrue"
+.asciiz "\nFalse"
+.asciiz "\na == b"
+.asciiz "\na != b"
+.asciiz "\na < b"
+.asciiz "\na > b"
+.asciiz "\na <= b"
+.asciiz "\na >= b"
+.asciiz "\n"
 
 .text
 
@@ -29,7 +30,7 @@ main:
     j     _L2
 _L1:
     lui   $4, 0x1001
-    ori   $4, $4, 0x5
+    ori   $4, $4, 0x6
     ori   $2, $0, 0x4
     syscall
 _L2:
@@ -39,7 +40,7 @@ _L2:
     sltiu $8, $8, 1
     beq   $8, $0, _L3
     lui   $4, 0x1001
-    ori   $4, $4, 0xb
+    ori   $4, $4, 0xd
     ori   $2, $0, 0x4
     syscall
     j     _L4
@@ -50,7 +51,7 @@ _L3:
     sltu  $8, $0, $8
     beq   $8, $0, _L5
     lui   $4, 0x1001
-    ori   $4, $4, 0x12
+    ori   $4, $4, 0x15
     ori   $2, $0, 0x4
     syscall
 _L5:
@@ -60,7 +61,7 @@ _L4:
     slt   $8, $8, $9
     beq   $8, $0, _L6
     lui   $4, 0x1001
-    ori   $4, $4, 0x19
+    ori   $4, $4, 0x1d
     ori   $2, $0, 0x4
     syscall
     j     _L7
@@ -70,7 +71,7 @@ _L6:
     slt   $8, $9, $8
     beq   $8, $0, _L8
     lui   $4, 0x1001
-    ori   $4, $4, 0x1f
+    ori   $4, $4, 0x24
     ori   $2, $0, 0x4
     syscall
 _L8:
@@ -81,7 +82,7 @@ _L7:
     xori  $8, $8, 0x1
     beq   $8, $0, _L9
     lui   $4, 0x1001
-    ori   $4, $4, 0x25
+    ori   $4, $4, 0x2b
     ori   $2, $0, 0x4
     syscall
     j     _L10
@@ -92,11 +93,15 @@ _L9:
     xori  $8, $8, 0x1
     beq   $8, $0, _L11
     lui   $4, 0x1001
-    ori   $4, $4, 0x2c
+    ori   $4, $4, 0x33
     ori   $2, $0, 0x4
     syscall
 _L11:
 _L10:
+    lui   $4, 0x1001
+    ori   $4, $4, 0x3b
+    ori   $2, $0, 0x4
+    syscall
     addiu $29, $29, 12
     ori   $2, $0, 0xa
     syscall
