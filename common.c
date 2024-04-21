@@ -21,7 +21,6 @@ extern bool stop_after_syntax;
 extern bool stop_after_verif;
 
 bool outfile_set = false;
-bool infile_set = false;
 
 void get_help() {
     printf("Usage: ./minicc [options] <source_file_to_compile>\n\n");
@@ -80,7 +79,8 @@ void parse_args(int argc, char **argv) {
 
         if (strcmp(arg, "-o") == 0) {
             if (arg_index < argc && argv[arg_index][0] != '-') {
-                outfile = arg;
+                outfile = strdupl(argv[arg_index]);
+                outfile_set = true;
 
                 if (outfile == NULL) {
                     fprintf(stderr, "Error: cannot allocate memory for output file name\n");
@@ -203,6 +203,11 @@ void free_nodes(node_t n) {
     if (n->str != NULL) {
         free(n->str);
         n->str = NULL;
+    }
+
+    if (outfile_set && outfile != NULL) {
+        free(outfile);
+        outfile = NULL;
     }
 
     n->decl_node = NULL;

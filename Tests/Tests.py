@@ -104,7 +104,7 @@ def execute_out_files(path, flags=""):
                 file_path = os.path.join(root, file)
                 assembly = file_path.replace('.c', '.s')
 
-                compile_command = f"./minicc {flags} {file_path} -o {assembly}"
+                compile_command = f"./minicc -o {assembly} {flags} {file_path}"
                 compile_result = subprocess.run(compile_command, shell=True, stderr=subprocess.PIPE, text=True)
 
                 compile_result.stderr = compile_result.stderr[:-1] if compile_result.stderr and compile_result.stderr[-1] == '\n' else compile_result.stderr
@@ -115,7 +115,7 @@ def execute_out_files(path, flags=""):
                     print(f"\t{root}/{file}    \t SUCCESS")
                     continue
 
-                execute_command = f"java -jar Tests/mars_4_2.jar nc np ae1 {assembly}"
+                execute_command = f"java -jar Tests/mars_4_2.jar nc np {assembly}"
                 execute_result = subprocess.run(execute_command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
 
                 execute_result.stderr = execute_result.stderr[:-1] if execute_result.stderr and execute_result.stderr[-1] == '\n' else execute_result.stderr
