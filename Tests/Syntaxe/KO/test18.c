@@ -1,4 +1,5 @@
-// Test mauvais print
+// 4
+
 void main() {
     printf("a");
 }

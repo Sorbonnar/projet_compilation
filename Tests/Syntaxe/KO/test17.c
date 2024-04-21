@@ -1,4 +1,5 @@
-// Test main mauvaises accolades
+// 3
+
 void main() [
     a;
 ]

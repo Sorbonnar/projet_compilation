@@ -20,7 +20,10 @@ int32_t trace_level = DEFAULT_TRACE_LEVEL;
 extern bool stop_after_syntax;
 extern bool stop_after_verif;
 
-void affiche_utilisation() {
+bool outfile_set = false;
+bool infile_set = false;
+
+void get_help() {
     printf("Usage: ./minicc [options] <source_file_to_compile>\n\n");
     printf("Options:\n");
     printf("  -b\t\tDisplay the compiler banner\n");
@@ -52,7 +55,7 @@ void parse_args(int argc, char **argv) {
 
         if (strcmp(arg, "-b") == 0) {
             if (argc > 2) {
-                fprintf(stderr, "Error: -b cannot be used with any other options\n");
+                fprintf(stderr, "Error: option \'-b\' cannot be used with any other options\n");
                 exit(1);
             }
             printf("\n      ___           ___           ___           ___                       ___       ___           ___     \n");
@@ -67,21 +70,28 @@ void parse_args(int argc, char **argv) {
             printf("    \\:\\__\\        \\::/  /        /:/  /                    \\/__/        \\:\\__\\     /:/  /       |:|  |    \n");
             printf("     \\/__/         \\/__/         \\/__/                                   \\/__/     \\/__/         \\|__|    \n");
             printf("\n\n");
-            printf("MiniC compiler based on Minicc by professor Quentin L. Meunier\n");
-            printf("Written by Mohamed Ghaibouche and Karim Qorar as part of a class project at Polytech Sorbonne\n\n");
+            printf("MiniC compiler based on Minicc by professor Quentin Meunier.\n");
+            printf("Written by Mohamed Ghaibouche and Karim Qorar as part of a class project at Polytech Sorbonne.\n\n");
+            printf("2024, final version.\n");
             exit(0);
         }
 
         arg_index++;
 
         if (strcmp(arg, "-o") == 0) {
-            if (arg_index < argc) {
-                outfile = strdupl(argv[arg_index]);
+            if (arg_index < argc && argv[arg_index][0] != '-') {
+                outfile = arg;
+
+                if (outfile == NULL) {
+                    fprintf(stderr, "Error: cannot allocate memory for output file name\n");
+                    exit(1);
+                }
+
                 arg_index++;
             }
             else {
-                fprintf(stderr, "Error: Missing argument for -o\n");
-                affiche_utilisation();
+                fprintf(stderr, "Error: missing argument for option \'-o\'\n");
+                get_help();
                 exit(1);
             }
         }
@@ -91,14 +101,14 @@ void parse_args(int argc, char **argv) {
                 arg_index++;
                 trace_level = atoi(argos);
                 if (trace_level < 0 || trace_level > 5) {
-                    fprintf(stderr, "Error: Trace level must be between 0 and 5\n");
-                    affiche_utilisation();
+                    fprintf(stderr, "Error: trace level must be between 0 and 5\n");
+                    get_help();
                     exit(1);
                 }
             }
             else {
-                fprintf(stderr, "Error: Missing argument for -t\n");
-                affiche_utilisation();
+                fprintf(stderr, "Error: missing argument for option \'-t\'\n");
+                get_help();
                 exit(1);
             }
         }
@@ -108,50 +118,50 @@ void parse_args(int argc, char **argv) {
                 arg_index++;
                 int max_regs = atoi(argos);
                 if (max_regs < 4 || max_regs > 8) {
-                    fprintf(stderr, "Error: Number of registers must be between 4 and 8\n");
-                    affiche_utilisation();
+                    fprintf(stderr, "Error: number of registers must be between 4 and 8\n");
+                    get_help();
                     exit(1);
                 }
                 set_max_registers(max_regs);
             }
             else {
-                fprintf(stderr, "Error: Missing argument for -r option\n");
-                affiche_utilisation();
+                fprintf(stderr, "Error: missing argument for option \'-r\'\n");
+                get_help();
                 exit(1);
             }
         }
         else if (strcmp(arg, "-s") == 0) {
             if (stop_after_verif) {
-                fprintf(stderr, "Error: -s and -v options are incompatible\n");
-                affiche_utilisation();
+                fprintf(stderr, "Error: options \'-s\' and \'-v\' are incompatible\n");
+                get_help();
                 exit(1);
             }
             stop_after_syntax = true;
         }
         else if (strcmp(arg, "-v") == 0) {
             if (stop_after_syntax) {
-                fprintf(stderr, "Error: -s and -v options are incompatible\n");
-                affiche_utilisation();
+                fprintf(stderr, "Error: options \'-s\' and \'-v\' are incompatible\n");
+                get_help();
                 exit(1);
             }
             stop_after_verif = true;
         }
         else if (strcmp(arg, "-h") == 0) {
-            affiche_utilisation();
+            get_help();
             exit(0);
         }
         else if (strcmp(arg + strlen(arg) - 2, ".c") == 0 || strcmp(arg + strlen(arg) - 2, ".C") == 0) {
             if (fichier_sortie > 0) {
-                fprintf(stderr, "Error: Multiple outfiles specified\n");
-                affiche_utilisation();
+                fprintf(stderr, "Error: multiple source files specified\n");
+                get_help();
                 exit(1);
             }
             infile = arg;
             fichier_sortie++;
         }
         else {
-            fprintf(stderr, "Error: Unknown option \'%s\'\n", arg);
-            affiche_utilisation();
+            fprintf(stderr, "Error: unknown option \'%s\'\n", arg);
+            get_help();
             exit(1);
         }
     }
@@ -159,14 +169,14 @@ void parse_args(int argc, char **argv) {
     if (infile != NULL) {
         FILE * f = fopen(infile, "r");
         if (f == NULL) {
-            fprintf(stderr, "Error: Cannot open file \'%s\'\n", infile);
+            fprintf(stderr, "Error: cannot open file \'%s\'\n", infile);
             exit(1);
         }
         fclose(f);
     }
     else {
-        fprintf(stderr, "Error: Missing source file\n");
-        affiche_utilisation();
+        fprintf(stderr, "Error: missing source file\n");
+        get_help();
         exit(1);
     }
 }

@@ -1,4 +1,5 @@
-// Test mauvais ident 1 (commence par un chiffre)
+// 4
+
 void main() {
     int 1c = 0;
 }

@@ -1,3 +1,7 @@
+// Expected output:
+// Total: 30
+//
+
 int a = 5;
 int b = 10;
 

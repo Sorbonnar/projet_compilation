@@ -1,4 +1,5 @@
-// Test point virgule au lieu de virgule dans les déclarations multiples
+// 4
+
 void main() {
-    int a; b;
+    int a = a * {};
 }

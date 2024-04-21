@@ -1,3 +1,7 @@
+// Expected output:
+// 10! = 3628800
+//
+
 int num = 10;
 
 void main() {

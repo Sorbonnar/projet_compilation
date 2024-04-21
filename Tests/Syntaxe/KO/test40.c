@@ -1,4 +1,5 @@
-// Test EQ
+// 4
+
 void main() {
     a = b ==;
 }

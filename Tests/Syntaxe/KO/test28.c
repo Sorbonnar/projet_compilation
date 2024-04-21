@@ -1,4 +1,5 @@
-// Test DO
+// 7
+
 void main() {
     do {
         a;

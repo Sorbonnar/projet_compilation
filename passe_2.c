@@ -10,14 +10,13 @@
 
 extern char * outfile;
 extern int trace_level;
-bool test = false;
 
 void gen_code_passe_2(node_t root); // Fonction pour démarrer la génération de code
 void gen_code_base(node_t node); // Fonction principale de génération de code
 void gen_code_print(node_t node); // Fonction pour générer le code d'affichage
-void gen_code_declaration(node_t node); // Fonction pour générer le code de déclaration
 void gen_code_instruction(node_t node); // Fonction pour générer le code d'instruction
 void gen_code_expression(node_t node); // Fonction pour générer le code d'expression
+void gen_code_declaration(node_t node); // Fonction pour générer le code de déclaration
 
 void gen_code_passe_2(node_t root) {
     printf_level(1, "\n################ Gencode Passe 2 ################\n");
@@ -39,13 +38,13 @@ void gen_code_base(node_t node) {
 
     switch (node->nature) {
         case NODE_BLOCK:
-            printf_level(1, "gen_code_base \t\t: Exploring NODE_BLOCK\n");
+            printf_level(1, "gen_code_base \t\t: exploring NODE_BLOCK\n");
             gen_code_declaration(node->opr[0]);
             gen_code_base(node->opr[1]);
             break;
 
         case NODE_FUNC:
-            printf_level(1, "gen_code_base \t\t: Exploring NODE_FUNC\n");
+            printf_level(1, "gen_code_base \t\t: exploring NODE_FUNC\n");
             reset_temporary_max_offset();
             set_temporary_start_offset(node->offset);
             label_str_inst_create(node->opr[1]->ident);
@@ -54,7 +53,7 @@ void gen_code_base(node_t node) {
             break;
 
         case NODE_PRINT:
-            printf_level(1, "gen_code_base \t\t: Exploring NODE_PRINT\n");
+            printf_level(1, "gen_code_base \t\t: exploring NODE_PRINT\n");
             gen_code_print(node);
             break;
 
@@ -71,13 +70,12 @@ void gen_code_base(node_t node) {
             break;
 
         case NODE_LIST:
-            printf_level(1, "gen_code_base \t\t: Exploring NODE_LIST\n");
-            for (int i = 0; i < node->nops; i++)
-                gen_code_base(node->opr[i]);
+            printf_level(1, "gen_code_base \t\t: exploring NODE_LIST\n");
+            for (int i = 0; i < node->nops; i++) gen_code_base(node->opr[i]);
             break;
 
         default:
-            fprintf(stderr, "Error line %d: Unknown node type \'%s\' in generation\n", node->lineno, node_nature2string(node->nature));
+            fprintf(stderr, "Error line %d: unknown node type \'%s\'\n", node->lineno, node_nature2string(node->nature));
             exit(1);
             break;
     }
@@ -88,7 +86,7 @@ void gen_code_print(node_t node) {
 
     for (int i = 0; i < node->nops; i++) {
         printf_level(1, "gen_code_print \t\t: ");
-        printf_level(1, "Exploring NODE_%s\n", node_nature2string(node->opr[i]->nature));
+        printf_level(1, "exploring NODE_%s\n", node_nature2string(node->opr[i]->nature));
         if (node->opr[i] != NULL) {
             if (node->opr[i]->nature == NODE_STRINGVAL) {
                 lui_inst_create(4, 0x1001);
@@ -107,7 +105,7 @@ void gen_code_print(node_t node) {
                     }
                 }
                 else {
-                    fprintf(stderr, "Error line %d: Undeclared variable \'%s\'\n", node->lineno, node->ident);
+                    fprintf(stderr, "Error line %d: undeclared variable \'%s\'\n", node->lineno, node->ident);
                     exit(1);
                 }
                 ori_inst_create(2, 0, 1);
@@ -125,7 +123,7 @@ void gen_code_instruction(node_t node) {
     if (node == NULL) return;
 
     printf_level(1, "gen_code_instruction \t: ");
-    printf_level(1, "Exploring NODE_%s\n", node_nature2string(node->nature));
+    printf_level(1, "exploring NODE_%s\n", node_nature2string(node->nature));
 
     int32_t reg_loop;
 
@@ -218,13 +216,13 @@ void gen_code_instruction(node_t node) {
                 }
             }
             else {
-                fprintf(stderr, "Error line %d: Undeclared variable \'%s\'\n", node->lineno, node->opr[0]->ident);
+                fprintf(stderr, "Error line %d: undeclared variable \'%s\'\n", node->lineno, node->opr[0]->ident);
                 exit(1);
             }
             break;
 
         default:
-            fprintf(stderr, "Error line %d: Unknown instruction type in generation\n", node->lineno);
+            fprintf(stderr, "Error line %d: unknown instruction type \'%s\'\n", node->lineno, node_nature2string(node->nature));
             exit(1);
             break;
     }
@@ -233,7 +231,7 @@ void gen_code_instruction(node_t node) {
 void gen_code_expression(node_t node) {
     if (node == NULL) return;
 
-    printf_level(1, "gen_code_expression \t: Exploring NODE_%s\n", node_nature2string(node->nature));
+    printf_level(1, "gen_code_expression \t: exploring NODE_%s\n", node_nature2string(node->nature));
 
     int32_t reg = get_current_reg(), reg1, reg2;
 
@@ -249,7 +247,7 @@ void gen_code_expression(node_t node) {
             }
         }
         else {
-            fprintf(stderr, "Error line %d: Undeclared variable \'%s\'\n", node->lineno, node->ident);
+            fprintf(stderr, "Error line %d: undeclared variable \'%s\'\n", node->lineno, node->ident);
             exit(1);
         }
     }
@@ -340,12 +338,12 @@ void gen_code_expression(node_t node) {
                 slt_inst_create(reg1, reg2, reg1);
                 break;
             case NODE_LE:
-                slt_inst_create(reg1, reg2, reg1);
-                xori_inst_create(reg1, reg1, 1);
+                slt_inst_create(reg1, reg2, reg1); // Same as NODE_GT
+                xori_inst_create(reg1, reg1, 1); // Invert the result
                 break;
             case NODE_GE:
-                slt_inst_create(reg1, reg1, reg2);
-                xori_inst_create(reg1, reg1, 1);
+                slt_inst_create(reg1, reg1, reg2); // Same as NODE_LT
+                xori_inst_create(reg1, reg1, 1); // Invert the result
                 break;
             case NODE_SLL:
                 sllv_inst_create(reg, reg1, reg2);
@@ -356,17 +354,17 @@ void gen_code_expression(node_t node) {
             case NODE_SRA:
                 srav_inst_create(reg, reg1, reg2);
                 break;
-            case NODE_NOT:
-                nor_inst_create(reg, 0, reg1);
+            case NODE_BNOT:
+                nor_inst_create(reg, 0, reg1); // Invert all the bits
                 break;
             case NODE_UMINUS:
                 subu_inst_create(reg, 0, reg1);
                 break;
-            case NODE_BNOT:
-                xori_inst_create(reg, reg1, 1);
+            case NODE_NOT:
+                xori_inst_create(reg, reg1, 1); // Invert the value
                 break;
             default:
-                fprintf(stderr, "Error line %d: Unknown expression type \'%s\' in generation\n", node->lineno, node_nature2string(node->nature));
+                fprintf(stderr, "Error line %d: unknown expression type \'%s\'\n", node->lineno, node_nature2string(node->nature));
                 exit(1);
                 break;
         }
@@ -380,7 +378,7 @@ void gen_code_declaration(node_t node) {
     if (node == NULL) return;
 
     printf_level(1, "gen_code_declaration \t: ");
-    printf_level(1, "Exploring NODE_%s\n", node_nature2string(node->nature));
+    printf_level(1, "exploring NODE_%s\n", node_nature2string(node->nature));
 
     if (node->nature == NODE_LIST) {
         gen_code_declaration(node->opr[0]);
@@ -390,7 +388,7 @@ void gen_code_declaration(node_t node) {
         gen_code_declaration(node->opr[1]);
     }
     else if (node->nature == NODE_DECL) {
-        printf_level(2, "In GenCode \t\t: Declaring %s \'%s\'\n", node->opr[0]->type == TYPE_INT ? "integer" : "boolean", node->opr[0]->ident);
+        printf_level(2, "In GenCode \t\t: declaring %s \'%s\'\n", node->opr[0]->type == TYPE_INT ? "integer" : "boolean", node->opr[0]->ident);
         if (node->opr[0]->global_decl) {
             word_inst_create(node->opr[0]->ident, node->opr[1]->value);
         }
@@ -400,7 +398,7 @@ void gen_code_declaration(node_t node) {
         }
     }
     else {
-        fprintf(stderr, "Error line %d: Unknown declaration type \'%s\' in generation\n", node->lineno, node_nature2string(node->nature));
+        fprintf(stderr, "Error line %d: unknown declaration type \'%s\'\n", node->lineno, node_nature2string(node->nature));
         exit(1);
     }
 }

@@ -10,11 +10,40 @@
 
 extern int trace_level;
 
+const char* get_symbol(node_nature node); // Fonction pour obtenir le symbole d'un noeud, utilisée seulement pour l'affichage
 void analyse_passe_1(node_t root); // Fonction pour démarrer le parcours
 void analyse_base(node_t node); // Fonction principale pour le parcours de l'arbre
-void analyse_expression(node_t node); // Fonction qui analyse les expressions
 void analyse_instruction(node_t node); // Fonction qui analyse les instructions
+void analyse_expression(node_t node); // Fonction qui analyse les expressions
 void analyse_declaration(bool global, node_t node, node_type type); // Fonction qui analyse les déclarations
+
+const char* get_symbol(node_nature node) {
+    switch (node) {
+        case NODE_PLUS: return "+";
+        case NODE_MINUS: return "-";
+        case NODE_MUL: return "*";
+        case NODE_DIV: return "/";
+        case NODE_MOD: return "%";
+        case NODE_BAND: return "&";
+        case NODE_BOR: return "|";
+        case NODE_BXOR: return "^";
+        case NODE_SLL: return "<<";
+        case NODE_SRL: return ">>";
+        case NODE_SRA: return ">>>";
+        case NODE_EQ: return "==";
+        case NODE_NE: return "!=";
+        case NODE_LT: return "<";
+        case NODE_GT: return ">";
+        case NODE_LE: return "<=";
+        case NODE_GE: return ">=";
+        case NODE_AND: return "&&";
+        case NODE_OR: return "||";
+        case NODE_UMINUS: return "-";
+        case NODE_NOT: return "!";
+        case NODE_BNOT: return "~";
+        default: return "?";
+    }
+}
  
 void analyse_passe_1(node_t root) {
     printf_level(3, "\n################ Analyse Passe 1 ################\n");
@@ -25,7 +54,7 @@ void analyse_passe_1(node_t root) {
         analyse_base(root->opr[1]);
     }
     else {
-        fprintf(stderr, "Error line %d: No main function\n", root->lineno);
+        fprintf(stderr, "Error line %d: no main function\n", root->lineno);
         exit(1);
     }
     pop_context();
@@ -36,7 +65,7 @@ void analyse_base(node_t node) {
 
     switch (node->nature) {
         case NODE_BLOCK:
-            printf_level(3, "analyse_base \t\t: Exploring node NODE_BLOCK\n");
+            printf_level(3, "analyse_base \t\t: exploring node NODE_BLOCK\n");
             push_context();
             analyse_declaration(0, node->opr[0], TYPE_NONE);
             analyse_base(node->opr[1]);
@@ -44,23 +73,23 @@ void analyse_base(node_t node) {
             break;
 
         case NODE_FUNC:
-            printf_level(3, "analyse_base \t\t: Exploring node NODE_FUNC\n");
+            printf_level(3, "analyse_base \t\t: exploring node NODE_FUNC\n");
             reset_env_current_offset();
             push_context();
             if (node->nops < 3) {
-                fprintf(stderr, "Error line %d: Function node is incomplete\n", node->lineno);
+                fprintf(stderr, "Error line %d: function node is incomplete\n", node->opr[0]->lineno);
                 exit(1);
             }
             else if (node->opr[0]->type != TYPE_VOID) {
-                fprintf(stderr, "Error line %d: Function node does not have the correct type \'void\'\n", node->lineno);
+                fprintf(stderr, "Error line %d: function node does not have the correct type \'void\'\n", node->opr[0]->lineno);
                 exit(1);
             }
             else if (node->opr[1]->nature != NODE_IDENT || strcmp(node->opr[1]->ident, "main") != 0) {
-                fprintf(stderr, "Error line %d: No main function\n", node->lineno);
+                fprintf(stderr, "Error line %d: no main function\n", node->opr[0]->lineno);
                 exit(1);
             }
             else if (node->opr[2]->nature != NODE_BLOCK) {
-                fprintf(stderr, "Error line %d: Function node does not have a block\n", node->lineno);
+                fprintf(stderr, "Error line %d: function node does not have a block\n", node->opr[0]->lineno);
                 exit(1);
             }
             analyse_base(node->opr[2]);
@@ -81,14 +110,12 @@ void analyse_base(node_t node) {
             break;
 
         case NODE_LIST:
-            printf_level(3, "analyse_base \t\t: Exploring node NODE_LIST\n");
-            for (int i = 0; i < node->nops; i++) {
-                analyse_base(node->opr[i]);
-            }
+            printf_level(3, "analyse_base \t\t: exploring node NODE_LIST\n");
+            for (int i = 0; i < node->nops; i++) analyse_base(node->opr[i]);
             break;
 
         default:
-            fprintf(stderr, "Error line %d: Unknown node type \'%s\'\n", node->lineno, node_nature2string(node->nature));
+            fprintf(stderr, "Error line %d: unknown node type \'%s\'\n", node->lineno, node_nature2string(node->nature));
             exit(1);
             break;
     }
@@ -98,18 +125,16 @@ void analyse_instruction(node_t node) {
     if (node == NULL) return;
 
     printf_level(3, "analyse_instruction \t: ");
-    printf_level(3, "Exploring node NODE_%s\n", node_nature2string(node->nature));
+    printf_level(3, "exploring node NODE_%s\n", node_nature2string(node->nature));
 
     switch (node->nature) {
         case NODE_IF:
             analyse_expression(node->opr[0]);
             analyse_base(node->opr[1]);
-            if (node->nops > 2) {
-                analyse_base(node->opr[2]);
-            }
+            if (node->nops > 2) analyse_base(node->opr[2]);
 
             if (node->opr[0]->type != TYPE_BOOL) {
-                fprintf(stderr, "Error line %d: Incorrect type for if condition, boolean expected\n", node->lineno);
+                fprintf(stderr, "Error line %d: incorrect type for \'if\' condition, boolean expected\n", node->opr[0]->lineno);
                 exit(1);
             }
             break;
@@ -119,7 +144,7 @@ void analyse_instruction(node_t node) {
             analyse_base(node->opr[1]);
 
             if (node->opr[0]->type != TYPE_BOOL) {
-                fprintf(stderr, "Error line %d: Incorrect type for loop condition, boolean expected\n", node->lineno);
+                fprintf(stderr, "Error line %d: incorrect type for \'while\' loop condition, boolean expected\n", node->opr[0]->lineno);
                 exit(1);
             }
             break;
@@ -129,7 +154,7 @@ void analyse_instruction(node_t node) {
             analyse_base(node->opr[0]);
 
             if (node->opr[1]->type != TYPE_BOOL) {
-                fprintf(stderr, "Error line %d: Incorrect type for loop condition, boolean expected\n", node->lineno);
+                fprintf(stderr, "Error line %d: incorrect type for \'do-while\' loop condition, boolean expected\n", node->opr[1]->lineno);
                 exit(1);
             }
             break;
@@ -141,27 +166,25 @@ void analyse_instruction(node_t node) {
             analyse_base(node->opr[3]);
 
             if (node->opr[1]->type != TYPE_BOOL) {
-                fprintf(stderr, "Error line %d: Incorrect type for loop condition, boolean expected\n", node->lineno);
+                fprintf(stderr, "Error line %d: incorrect type for \'for\' loop condition, boolean expected\n", node->opr[1]->lineno);
                 exit(1);
             }
             break;
 
         case NODE_PRINT:
-            for (int i = 0; i < node->nops; ++i) {
-                if (node->opr[i] != NULL) analyse_base(node->opr[i]);
-            }
+            for (int i = 0; i < node->nops; ++i) if (node->opr[i] != NULL) analyse_base(node->opr[i]);
             break;
 
         case NODE_AFFECT:
             if (node->opr[0]->nature != NODE_IDENT) {
-                fprintf(stderr, "Error line %d: Affectation to a non-identifier\n", node->lineno);
+                fprintf(stderr, "Error line %d: affectation to a non-identifier\n", node->lineno);
                 exit(1);
             }
             analyse_expression(node->opr[0]);
             analyse_expression(node->opr[1]);
 
             if (node->opr[0]->type != node->opr[1]->type) {
-                fprintf(stderr, "Error line %d: Incorrect type for affectation to variable \'%s\'\n", node->lineno, node->opr[0]->ident);
+                fprintf(stderr, "Error line %d: incorrect type for affectation to variable \'%s\'\n", node->lineno, node->opr[0]->ident);
                 exit(1);
             }
 
@@ -172,7 +195,7 @@ void analyse_instruction(node_t node) {
             break;
 
         default:
-            fprintf(stderr, "Error line %d: Unknown instruction type \'%s\'\n", node->lineno, node_nature2string(node->nature));
+            fprintf(stderr, "Error line %d: unknown instruction type \'%s\'\n", node->lineno, node_nature2string(node->nature));
             exit(1);
     }
 }
@@ -181,7 +204,7 @@ void analyse_expression(node_t node) {
     if (node == NULL) return;
 
     printf_level(3, "analyse_expression \t: ");
-    printf_level(3, "Exploring node NODE_%s\n", node_nature2string(node->nature));
+    printf_level(3, "exploring node NODE_%s\n", node_nature2string(node->nature));
 
     switch (node->nature) {
         case NODE_PLUS: case NODE_MINUS: case NODE_MUL: case NODE_DIV:
@@ -191,11 +214,11 @@ void analyse_expression(node_t node) {
             analyse_expression(node->opr[1]);
 
             if (node->opr[0]->type != TYPE_INT) {
-                fprintf(stderr, "Error line %d: \'%s\' is of incorrect type for arithmetic operation, integer expected\n", node->lineno, node->opr[0]->ident);
+                fprintf(stderr, "Error line %d: \'%s\' is of incorrect type for arithmetic operation \'%s\', integer expected\n", node->lineno, node->opr[0]->ident, get_symbol(node->nature));
                 exit(1);
             }
             else if (node->opr[1]->type != TYPE_INT) {
-                fprintf(stderr, "Error line %d: \'%s\' is of incorrect type for arithmetic operation, integer expected\n", node->lineno, node->opr[1]->ident);
+                fprintf(stderr, "Error line %d: \'%s\' is of incorrect type for arithmetic operation \'%s\', integer expected\n", node->lineno, node->opr[1]->ident, get_symbol(node->nature));
                 exit(1);
             }
 
@@ -208,11 +231,11 @@ void analyse_expression(node_t node) {
             analyse_expression(node->opr[1]);
 
             if (node->opr[0]->type != TYPE_INT) {
-                fprintf(stderr, "Error line %d: \'%s\' is of incorrect type for comparison, integer expected\n", node->lineno, node->opr[0]->ident);
+                fprintf(stderr, "Error line %d: \'%s\' is of incorrect type for comparison \'%s\', integer expected\n", node->lineno, node->opr[0]->ident, get_symbol(node->nature));
                 exit(1);
             }
             else if (node->opr[1]->type != TYPE_INT) {
-                fprintf(stderr, "Error line %d: \'%s\' is of incorrect type for comparison, integer expected\n", node->lineno, node->opr[1]->ident);
+                fprintf(stderr, "Error line %d: \'%s\' is of incorrect type for comparison \'%s\', integer expected\n", node->lineno, node->opr[1]->ident, get_symbol(node->nature));
                 exit(1);
             }
 
@@ -224,33 +247,33 @@ void analyse_expression(node_t node) {
             analyse_expression(node->opr[1]);
 
             if (node->opr[0]->type != TYPE_BOOL) {
-                fprintf(stderr, "Error line %d: \'%s\' is of incorrect type for logical operation, boolean expected\n", node->lineno, node->opr[0]->ident);
+                fprintf(stderr, "Error line %d: \'%s\' is of incorrect type for logical operation \'%s\', boolean expected\n", node->lineno, node->opr[0]->ident, get_symbol(node->nature));
                 exit(1);
             }
             else if (node->opr[1]->type != TYPE_BOOL) {
-                fprintf(stderr, "Error line %d: \'%s\' is of incorrect type for logical operation, boolean expected\n", node->lineno, node->opr[1]->ident);
+                fprintf(stderr, "Error line %d: \'%s\' is of incorrect type for logical operation \'%s\', boolean expected\n", node->lineno, node->opr[1]->ident, get_symbol(node->nature));
                 exit(1);
             }
 
             node->type = TYPE_BOOL;
             break;
 
-        case NODE_UMINUS: case NODE_NOT:
+        case NODE_UMINUS: case NODE_BNOT:
             analyse_expression(node->opr[0]);
 
             if (node->opr[0]->type != TYPE_INT) {
-                fprintf(stderr, "Error line %d: \'%s\' is of incorrect type for unary operation, integer expected\n", node->lineno, node->opr[0]->ident);
+                fprintf(stderr, "Error line %d: \'%s\' is of incorrect type for unary operation \'%s\', integer expected\n", node->lineno, node->opr[0]->ident, get_symbol(node->nature));
                 exit(1);
             }
 
             node->type = TYPE_INT;
             break;
 
-        case NODE_BNOT:
+        case NODE_NOT:
             analyse_expression(node->opr[0]);
 
             if (node->opr[0]->type != TYPE_BOOL) {
-                fprintf(stderr, "Error line %d: \'%s\' is of incorrect type for unary operation, boolean expected\n", node->lineno, node->opr[0]->ident);
+                fprintf(stderr, "Error line %d: \'%s\' is of incorrect type for unary operation \'%s\', boolean expected\n", node->lineno, node->opr[0]->ident, get_symbol(node->nature));
                 exit(1);
             }
 
@@ -268,14 +291,13 @@ void analyse_expression(node_t node) {
         case NODE_STRINGVAL:
             int off = -1;
             if (node->str != NULL) off = add_string(node->str);
-            if (off >= 0)
-                node->offset = off;
+            if (off >= 0) node->offset = off;
             break;
 
         case NODE_IDENT:
             void *decl_node = get_decl_node(node->ident);
             if (decl_node == NULL) {
-                fprintf(stderr, "Error line %d: Undeclared variable \'%s\'\n", node->lineno, node->ident);
+                fprintf(stderr, "Error line %d: undeclared variable \'%s\'\n", node->lineno, node->ident);
                 exit(1);
             }
             node->decl_node = decl_node;
@@ -283,7 +305,7 @@ void analyse_expression(node_t node) {
             break;
 
         default:
-            fprintf(stderr, "Error line %d: Unknown expression type \'%s\'\n", node->lineno, node_nature2string(node->nature));
+            fprintf(stderr, "Error line %d: unknown expression type \'%s\'\n", node->lineno, node_nature2string(node->nature));
             exit(1);
             break;
     }
@@ -291,10 +313,11 @@ void analyse_expression(node_t node) {
 
 void analyse_declaration(bool global, node_t node, node_type type) {
     if (node == NULL) return;
+
     int off = -1;
 
     printf_level(3, "analyse_declaration \t: ");
-    printf_level(3, "Exploring node NODE_%s\n", node_nature2string(node->nature));
+    printf_level(3, "exploring node NODE_%s\n", node_nature2string(node->nature));
 
     if (node->nature == NODE_LIST) {
         analyse_declaration(global, node->opr[0], type);
@@ -304,15 +327,12 @@ void analyse_declaration(bool global, node_t node, node_type type) {
         analyse_declaration(global, node->opr[1], node->opr[0]->type);
     }
     else if (node->nature == NODE_DECL) {
-        if (type == TYPE_NONE) {
-            fprintf(stderr, "Error line %d: Unknown declaration type \'%s\'\n", node->lineno, node_nature2string(node->nature));
+        printf_level(4, "In analyse \t\t: declaring %s \'%s\'\n", type == TYPE_INT ? "integer" : "boolean", node->opr[0]->ident);
+
+        if (type == TYPE_VOID) {
+            fprintf(stderr, "Error line %d: variable of type void\n", node->lineno);
             exit(1);
         }
-        else if (type == TYPE_VOID) {
-            fprintf(stderr, "Error line %d: Variable of type void\n", node->lineno);
-            exit(1);
-        }
-        printf_level(4, "In analyse \t\t: Declaring %s \'%s\'\n", type == TYPE_INT ? "integer" : "boolean", node->opr[0]->ident);
 
         if (node->opr[0] != NULL) {
             off = env_add_element(node->opr[0]->ident, node->opr[0]);
@@ -321,9 +341,10 @@ void analyse_declaration(bool global, node_t node, node_type type) {
         }
         if (node->opr[1] != NULL) {
             if (global && node->opr[1]->nature != NODE_INTVAL && node->opr[1]->nature != NODE_BOOLVAL) {
-                fprintf(stderr, "Error line %d: Global variables must be initialized with a constant value\n", node->lineno);
+                fprintf(stderr, "Error line %d: global variables must be initialized with a constant value\n", node->lineno);
                 exit(1);
             }
+
             analyse_expression(node->opr[1]);
 
             if (node->opr[1]->type != type) {
@@ -343,25 +364,25 @@ void analyse_declaration(bool global, node_t node, node_type type) {
                 node->opr[1]->value = false;
             }
             else if (type == TYPE_VOID) {
-                fprintf(stderr, "Error line %d: Variable of type void\n", node->lineno);
+                fprintf(stderr, "Error line %d: type void can't be attributed to a variable\n", node->lineno);
                 exit(1);
             }
-
             else {
-                fprintf(stderr, "Error line %d: Unknown declaration type \'%s\'\n", node->lineno, node_nature2string(node->nature));
+                fprintf(stderr, "Error line %d: unknown declaration type \'%s\'\n", node->lineno, node_nature2string(node->nature));
                 exit(1);
             }
         }
 
-        if (off >= 0)
+        if (off >= 0) {
             node->opr[0]->offset = off;
+        }
         else {
-            fprintf(stderr, "Error line %d: Variable \'%s\' already declared in this context\n", node->lineno, node->opr[0]->ident);
+            fprintf(stderr, "Error line %d: variable \'%s\' already declared in this scope\n", node->lineno, node->opr[0]->ident);
             exit(1);
         }
     }
     else {
-        fprintf(stderr, "Error line %d: Unknown declaration type \'%s\'\n", node->lineno, node_nature2string(node->nature));
+        fprintf(stderr, "Error line %d: unknown declaration type \'%s\'\n", node->lineno, node_nature2string(node->nature));
         exit(1);
     }
 }

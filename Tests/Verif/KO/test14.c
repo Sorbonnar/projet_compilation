@@ -1,6 +1,6 @@
+// 4
+
+int a = 1;
+int b = a + 1;
 void main() {
-    if (true) {
-        int a = 5;
-    }
-    print(a);
 }

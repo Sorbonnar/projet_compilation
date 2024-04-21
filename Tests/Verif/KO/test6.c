@@ -1,6 +1,6 @@
-void main() {
-   int a =1;
-   bool b=false;
-   bool c =a+b;
-   
+// 5
+
+void main(){
+    bool z=false;
+    z =z^z;
 }

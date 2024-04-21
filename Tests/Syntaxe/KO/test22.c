@@ -1,4 +1,5 @@
-// Test print accolade
+// 4
+
 void main() {
     print["a"];
 }

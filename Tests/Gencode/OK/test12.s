@@ -3,7 +3,6 @@
 
 num: .word 10
 .asciiz "! = "
-.asciiz "\n"
 
 .text
 
@@ -41,10 +40,6 @@ _L2:
     syscall
     lw    $4, 0($29)
     ori   $2, $0, 0x1
-    syscall
-    lui   $4, 0x1001
-    ori   $4, $4, 0x9
-    ori   $2, $0, 0x4
     syscall
     addiu $29, $29, 8
     ori   $2, $0, 0xa

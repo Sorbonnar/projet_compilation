@@ -1,8 +1,8 @@
-void main() {
-   int a = 1;
+// 7
 
-   if(a){
-       print("HelloWord");
-   }
-   
+void main(){
+    int t=5;
+    bool a = true;
+    bool b = true;
+    t=(a & b);
 }

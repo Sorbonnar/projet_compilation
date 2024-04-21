@@ -1,4 +1,5 @@
-// Test print sans guillemets
+// 4
+
 void main() {
-    print(a);
+    print(a b);
 }

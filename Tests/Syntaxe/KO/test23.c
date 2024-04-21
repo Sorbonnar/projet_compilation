@@ -1,4 +1,5 @@
-// Test point virgule absent
+// 5
+
 void main() {
     print("a")
 }

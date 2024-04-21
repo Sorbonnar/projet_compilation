@@ -1,4 +1,5 @@
-// Test BOR
+// 4
+
 void main() {
     a = b |;
 }

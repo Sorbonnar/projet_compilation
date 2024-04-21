@@ -1,4 +1,5 @@
-// Test mauvais ident 3 (contient un caractère spécial)
+// 4
+
 void main() {
     int c$ = 0;
 }

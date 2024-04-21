@@ -1,5 +1,7 @@
+// 6
+
 void main() {
-
-	a=10;
-
+    int a = 1;
+    int b = 1;
+    bool c = a && b;
 }

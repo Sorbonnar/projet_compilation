@@ -1,4 +1,5 @@
-// Test DIV
+// 4
+
 void main() {
     a = b /;
 }

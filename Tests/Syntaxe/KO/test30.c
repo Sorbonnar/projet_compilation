@@ -1,4 +1,5 @@
-// Test parenthèses flottantes
+// 4
+
 void main() {
     ();
 }

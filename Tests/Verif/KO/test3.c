@@ -1,5 +1,7 @@
-void main() {
+// 6
 
-    int b = 2;
-    int b= 2;
+void main(){
+    int t=5;
+    bool a = true;
+    a<<1;
 }

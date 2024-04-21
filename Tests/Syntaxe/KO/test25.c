@@ -1,4 +1,5 @@
-// Test IF
+// 4
+
 void main() {
     if c {
         a;

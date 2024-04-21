@@ -1,4 +1,5 @@
-// Test print sans parenthèse
+// 4
+
 void main() {
     print"a";
 }

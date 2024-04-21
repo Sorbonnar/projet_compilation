@@ -5,7 +5,7 @@ limit: .word 3
 .asciiz "("
 .asciiz ", "
 .asciiz ")\n"
-.asciiz "a: "
+.asciiz "a= "
 .asciiz "\n"
 
 .text

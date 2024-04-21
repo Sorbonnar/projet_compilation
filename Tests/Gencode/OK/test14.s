@@ -7,7 +7,6 @@
 .asciiz "\nsub = "
 .asciiz "\nmul = "
 .asciiz "\ndiv = "
-.asciiz "\n"
 
 .text
 
@@ -80,10 +79,6 @@ main:
     syscall
     lw    $4, 20($29)
     ori   $2, $0, 0x1
-    syscall
-    lui   $4, 0x1001
-    ori   $4, $4, 0x2b
-    ori   $2, $0, 0x4
     syscall
     addiu $29, $29, 24
     ori   $2, $0, 0xa

@@ -1,6 +1,7 @@
-int b=1;
-int c=1;
-int d=b+74;
-void main() {
-    int a = 1;
+// 6
+
+void main(){
+    int z=5;
+    bool a = true;
+    a=~a;
 }

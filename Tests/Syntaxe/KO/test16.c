@@ -1,3 +1,4 @@
-// Test main sans accolade 2
+// 5
+
 void main() {
     a;

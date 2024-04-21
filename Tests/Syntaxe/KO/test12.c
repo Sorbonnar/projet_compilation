@@ -1,4 +1,5 @@
-// Test main sans type
+// 3
+
 main() {
     a;
 }

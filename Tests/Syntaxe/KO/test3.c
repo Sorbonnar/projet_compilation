@@ -1,4 +1,5 @@
-// Test mauvais caractère d'affectation (double égale)
+// 4
+
 void main() {
     int c == 0;
 }

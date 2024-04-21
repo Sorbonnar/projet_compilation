@@ -1,4 +1,6 @@
-// Un exemple de programme MiniC
+// Expected output:
+// sum: 4950
+//
 int start = 0;
 int end = 100;
 

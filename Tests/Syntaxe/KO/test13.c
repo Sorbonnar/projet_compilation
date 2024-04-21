@@ -1,4 +1,5 @@
-// Test main sans parenthèses
+// 3
+
 void main {
     a;
 }

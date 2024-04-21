@@ -1,4 +1,5 @@
-// Test PLUS
+// 4
+
 void main() {
     a = b +;
 }

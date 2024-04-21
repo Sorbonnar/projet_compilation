@@ -1,4 +1,5 @@
-// Test SRA
+// 4
+
 void main() {
     a = b >>;
 }

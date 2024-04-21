@@ -1,3 +1,8 @@
+// 6
+
 void main() {
-	int a = true;
+    bool a = true;
+    if (!a) {
+        print(b);
+    }
 }

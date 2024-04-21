@@ -1,8 +1,7 @@
-void main() {
-   int a;
-   if(2){
+// 6
 
-       print("1",a);
-   }
-
+void main(){
+    int i;
+    bool a =true;
+    a= a%i;
 }

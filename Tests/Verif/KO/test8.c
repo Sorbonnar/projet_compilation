@@ -1,5 +1,7 @@
-void main() {
-   int a=1;
-    int b=1;
-    bool c =a && b;
+// 6
+
+void main(){
+    int t=5;
+    bool a = true;
+    a= a/a;
 }

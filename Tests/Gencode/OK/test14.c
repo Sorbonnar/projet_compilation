@@ -23,6 +23,4 @@ void main() {
     print("\nsub = ", sub);
     print("\nmul = ", mul);
     print("\ndiv = ", div);
-
-    print("\n");
 }

@@ -1,4 +1,5 @@
-// Test LT
+// 4
+
 void main() {
     a = b <;
 }

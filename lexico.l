@@ -43,7 +43,7 @@ ENTIER_DEC      0|{CHIFFRE_NON_NUL}{CHIFFRE}*
 LETTRE_HEXA     [a-fA-F]
 ENTIER_HEXA     0x({CHIFFRE}|{LETTRE_HEXA})+
 ENTIER          {ENTIER_DEC}|{ENTIER_HEXA}
-CHAINE_CAR      [^"\\]
+CHAINE_CAR      [\x20\x21\x23-\x5B\x5D-\x7E]
 CHAINE          \"({CHAINE_CAR}|\\\"|\\n)*\"
 COMMENTAIRE     "//".*
 IDF             {LETTRE}({LETTRE}|{CHIFFRE}|_)*
@@ -93,8 +93,8 @@ IDF             {LETTRE}({LETTRE}|{CHIFFRE}|_)*
 "/"             RETURN(TOK_DIV);
 "%"             RETURN(TOK_MOD);
 
-"~"             RETURN(TOK_NOT);
-"!"             RETURN(TOK_BNOT);
+"~"             RETURN(TOK_BNOT);
+"!"             RETURN(TOK_NOT);
 
 
 {IDF} {
@@ -114,7 +114,7 @@ IDF             {LETTRE}({LETTRE}|{CHIFFRE}|_)*
                 long int value = strtol(yytext, &endptr, 0);
 
                 if (errno == ERANGE || *endptr != '\0' || value > 0xFFFFFFFF) {
-                    fprintf(stderr, "Error line %d: Out of bounds error\n", yylineno);
+                    fprintf(stderr, "Error line %d: out of range error\n", yylineno);
                     exit(1);
                 }
 
@@ -136,10 +136,10 @@ IDF             {LETTRE}({LETTRE}|{CHIFFRE}|_)*
 {COMMENTAIRE} {
 }
 
-[ \t\n]+
+[ \t\n\r]+
 
 . {
-                fprintf(stderr, "Error line %d: Lexical error\n", yylineno);
+                fprintf(stderr, "Error line %d: lexical error\n", yylineno);
                 exit(1);
 }
 

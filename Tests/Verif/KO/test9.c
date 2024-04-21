@@ -1,6 +1,12 @@
-void main() {
-    bool a = true;
-    while(a){
-        print("HelloWord",b);
-    }
+// 4
+
+void main(){
+     if(5){
+         int a;
+     }else{
+         int b;
+
+
+     }
+
 }

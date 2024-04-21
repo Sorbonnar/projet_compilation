@@ -1,4 +1,5 @@
-// Test main mauvaise parenthèses
+// 3
+
 void main[] {
     a;
 }

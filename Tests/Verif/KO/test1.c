@@ -1,6 +1,5 @@
-void main() {
-    int a = 1;
-    while(a) {
-        print("HelloWorld");
-    }
+// 4
+
+void main(){
+    int z=false;
 }

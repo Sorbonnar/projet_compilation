@@ -1,4 +1,5 @@
-// Test GE
+// 4
+
 void main() {
     a = b >=;
 }

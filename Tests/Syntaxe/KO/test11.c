@@ -1,4 +1,5 @@
-// Test affectation d'un nombre négatif
+// 4
+
 void main() {
-    int c = -1;
+    print("a" + "b");
 }

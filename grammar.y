@@ -153,17 +153,17 @@ type:
         TOK_INT
         { 
             printf_level(5, "type rule \t\t: Int\n");
-            $$ = make_terminal_node(NODE_TYPE, 0);
+            $$ = make_terminal_node(NODE_TYPE, TYPE_INT);
         }
         | TOK_BOOL
         { 
             printf_level(5, "type rule \t\t: Bool\n");
-            $$ = make_terminal_node(NODE_TYPE, 1);
+            $$ = make_terminal_node(NODE_TYPE, TYPE_BOOL);
         }
         | TOK_VOID
         { 
             printf_level(5, "type rule \t\t: Void\n");
-            $$ = make_terminal_node(NODE_TYPE, 2);
+            $$ = make_terminal_node(NODE_TYPE, TYPE_VOID);
         }
         ;
 
@@ -470,9 +470,6 @@ node_t make_node(node_nature nature, int nops, ...) {
 
 node_t make_terminal_node(node_nature nature, ...) {
     node_t node = make_node(nature, 0);
-
-    int intval;
-    char* strval;
     
     if (node == NULL) {
         fprintf(stderr, "Error line %d: malloc error\n", yylineno);
@@ -485,32 +482,34 @@ node_t make_terminal_node(node_nature nature, ...) {
     switch (nature) {
         case NODE_IDENT:
         case NODE_STRINGVAL:
-            strval = va_arg(args, char*);
+            char* str_val;
+            str_val = va_arg(args, char*);
             
-            if (strval == NULL) {
+            if (str_val == NULL) {
                 free(node);
                 fprintf(stderr, "Error line %d: NULL string error\n", yylineno);
                 exit(1);
             }
 
             if (nature == NODE_IDENT) {
-                node->ident = strdupl(strval);
+                node->ident = strdupl(str_val);
             }
             else {
-                node->str = strdupl(strval);
+                node->str = strdupl(str_val);
             }
-            free(strval);
+            free(str_val);
             break;
         
         case NODE_TYPE:
-            intval = va_arg(args, int);
-            node->type = (intval == 0) ? TYPE_INT : (intval == 1) ? TYPE_BOOL : (intval == 2) ? TYPE_VOID : TYPE_NONE;
+            int type_val;
+            type_val = va_arg(args, int);
+            node->type = type_val;
             break;
 
         case NODE_INTVAL:
         case NODE_BOOLVAL:
-            int64_t value = va_arg(args, int64_t);
-            node->value = value;
+            int64_t int_val = va_arg(args, int64_t);
+            node->value = int_val;
             break;
             
         default:

@@ -1,4 +1,5 @@
-// Test pas de virgule dans la déclaration
+// 4
+
 void main() {
     int a = 1 b = 100;
 }

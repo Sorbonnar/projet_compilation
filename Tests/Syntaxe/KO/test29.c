@@ -1,4 +1,5 @@
-// Test print sans paramètres
+// 4
+
 void main() {
     print();
 }
